@@ -14,6 +14,8 @@ import javax.swing.SwingUtilities;
  *
  * @author USER
  */
+
+//kari suraj
 public class Cashier extends javax.swing.JFrame {
 
     /**
