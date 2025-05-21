@@ -240,6 +240,11 @@ public class StockManagement extends javax.swing.JFrame {
         jButton11.setForeground(new java.awt.Color(255, 255, 255));
         jButton11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-lorry-25.png"))); // NOI18N
         jButton11.setText("                        SUPPLIER");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
 
         jButton12.setBackground(new java.awt.Color(51, 51, 51));
         jButton12.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
@@ -468,6 +473,13 @@ public class StockManagement extends javax.swing.JFrame {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        StockManagementSupplier SMSupplier = new StockManagementSupplier();
+        jPanel6.removeAll();
+        jPanel6.add(SMSupplier,BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
+    }//GEN-LAST:event_jButton11ActionPerformed
 
     private void menuExpandLeft() {
         jButton6.setVisible(true);
