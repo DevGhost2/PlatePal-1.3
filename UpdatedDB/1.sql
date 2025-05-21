@@ -55,11 +55,10 @@ CREATE TABLE IF NOT EXISTS `category` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.category: ~0 rows (approximately)
+-- Dumping data for table 123.category: ~2 rows (approximately)
 INSERT INTO `category` (`id`, `name`) VALUES
-	(1, 'all'),
-	(2, 'food'),
-	(3, 'drinks');
+	(2, 'Foods'),
+	(3, 'Frinks');
 
 -- Dumping structure for table 123.company
 CREATE TABLE IF NOT EXISTS `company` (
@@ -126,6 +125,7 @@ CREATE TABLE IF NOT EXISTS `employee` (
   `emp_id` varchar(10) NOT NULL,
   `first_name` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
   `last_name` varchar(40) NOT NULL,
+  `mobile` varchar(10) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(20) NOT NULL,
   `branch_id` int NOT NULL,
@@ -166,8 +166,6 @@ CREATE TABLE IF NOT EXISTS `employee_attendance` (
   `checkout_time` datetime DEFAULT NULL,
   `date` date NOT NULL,
   `employee_id` int NOT NULL,
-  `regular_hours` double DEFAULT NULL,
-  `ot_hours` double DEFAULT NULL,
   `attendance_type_id` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_employee_attendance_employee1_idx` (`employee_id`),
@@ -324,8 +322,8 @@ CREATE TABLE IF NOT EXISTS `payment_method` (
 -- Dumping structure for table 123.product
 CREATE TABLE IF NOT EXISTS `product` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
   `product_id` varchar(10) NOT NULL,
-  `title` varchar(100) NOT NULL,
   `description` longtext NOT NULL,
   `added_date` datetime NOT NULL,
   `category_id` int NOT NULL,
@@ -336,11 +334,19 @@ CREATE TABLE IF NOT EXISTS `product` (
   KEY `fk_product_product_status1_idx` (`product_status_id`),
   CONSTRAINT `fk_product_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`),
   CONSTRAINT `fk_product_product_status1` FOREIGN KEY (`product_status_id`) REFERENCES `product_status` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.product: ~0 rows (approximately)
-INSERT INTO `product` (`id`, `product_id`, `title`, `description`, `added_date`, `category_id`, `product_status_id`) VALUES
-	(1, 'pdt001', 'Kottu', 'parata kottu', '2025-05-21 02:36:09', 2, 1);
+-- Dumping data for table 123.product: ~9 rows (approximately)
+INSERT INTO `product` (`id`, `title`, `product_id`, `description`, `added_date`, `category_id`, `product_status_id`) VALUES
+	(1, 'Kottu', 'pdct001', 'parata kottu', '2025-05-21 02:36:09', 2, 1),
+	(2, 'Rice', 'pdct002', 'Baasmathi rice', '2025-05-21 03:06:27', 2, 1),
+	(3, 'Biriyani', 'pdct003', 'dawdaw', '2025-05-21 03:07:49', 2, 1),
+	(4, 'Nasiguran', 'pdct004', 'fsdfs', '2025-05-21 03:08:27', 2, 1),
+	(5, 'Shorteats', 'pdct005', 'fserfweg', '2025-05-21 03:09:47', 2, 1),
+	(6, 'Plain Tea', 'pdct006', 'fsef', '2025-05-21 03:10:22', 3, 1),
+	(7, 'Water', 'pdct007', 'fsadf', '2025-05-21 03:13:41', 3, 1),
+	(8, 'Cocacola', 'pdct008', 'daffse', '2025-05-21 03:14:06', 3, 1),
+	(9, 'Faluda', 'pdct009', 'dfgsdf', '2025-05-21 03:14:51', 3, 1);
 
 -- Dumping structure for table 123.product_has_size
 CREATE TABLE IF NOT EXISTS `product_has_size` (
@@ -365,9 +371,19 @@ CREATE TABLE IF NOT EXISTS `product_images` (
   PRIMARY KEY (`id`),
   KEY `fk_product_images_product1_idx` (`product_id`),
   CONSTRAINT `fk_product_images_product1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.product_images: ~0 rows (approximately)
+-- Dumping data for table 123.product_images: ~9 rows (approximately)
+INSERT INTO `product_images` (`id`, `url`, `product_id`) VALUES
+	(1, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 1),
+	(2, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 2),
+	(3, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 3),
+	(4, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 4),
+	(5, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 5),
+	(6, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 6),
+	(7, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 7),
+	(8, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 8),
+	(9, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 9);
 
 -- Dumping structure for table 123.product_status
 CREATE TABLE IF NOT EXISTS `product_status` (
@@ -376,7 +392,7 @@ CREATE TABLE IF NOT EXISTS `product_status` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.product_status: ~0 rows (approximately)
+-- Dumping data for table 123.product_status: ~2 rows (approximately)
 INSERT INTO `product_status` (`id`, `name`) VALUES
 	(1, 'Active'),
 	(2, 'Deactive');
@@ -454,9 +470,13 @@ CREATE TABLE IF NOT EXISTS `size` (
   `id` int NOT NULL AUTO_INCREMENT,
   `size_type` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.size: ~0 rows (approximately)
+-- Dumping data for table 123.size: ~3 rows (approximately)
+INSERT INTO `size` (`id`, `size_type`) VALUES
+	(1, 'md'),
+	(2, 'lg'),
+	(3, 'xl');
 
 -- Dumping structure for table 123.stock
 CREATE TABLE IF NOT EXISTS `stock` (
