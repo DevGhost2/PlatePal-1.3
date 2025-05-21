@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `category` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.category: ~2 rows (approximately)
+-- Dumping data for table 123.category: ~0 rows (approximately)
 INSERT INTO `category` (`id`, `name`) VALUES
 	(2, 'Foods'),
 	(3, 'Frinks');
@@ -336,7 +336,7 @@ CREATE TABLE IF NOT EXISTS `product` (
   CONSTRAINT `fk_product_product_status1` FOREIGN KEY (`product_status_id`) REFERENCES `product_status` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.product: ~9 rows (approximately)
+-- Dumping data for table 123.product: ~0 rows (approximately)
 INSERT INTO `product` (`id`, `title`, `product_id`, `description`, `added_date`, `category_id`, `product_status_id`) VALUES
 	(1, 'Kottu', 'pdct001', 'parata kottu', '2025-05-21 02:36:09', 2, 1),
 	(2, 'Rice', 'pdct002', 'Baasmathi rice', '2025-05-21 03:06:27', 2, 1),
@@ -373,7 +373,7 @@ CREATE TABLE IF NOT EXISTS `product_images` (
   CONSTRAINT `fk_product_images_product1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.product_images: ~9 rows (approximately)
+-- Dumping data for table 123.product_images: ~0 rows (approximately)
 INSERT INTO `product_images` (`id`, `url`, `product_id`) VALUES
 	(1, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 1),
 	(2, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 2),
@@ -392,7 +392,7 @@ CREATE TABLE IF NOT EXISTS `product_status` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.product_status: ~2 rows (approximately)
+-- Dumping data for table 123.product_status: ~0 rows (approximately)
 INSERT INTO `product_status` (`id`, `name`) VALUES
 	(1, 'Active'),
 	(2, 'Deactive');
@@ -472,7 +472,7 @@ CREATE TABLE IF NOT EXISTS `size` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.size: ~3 rows (approximately)
+-- Dumping data for table 123.size: ~0 rows (approximately)
 INSERT INTO `size` (`id`, `size_type`) VALUES
 	(1, 'md'),
 	(2, 'lg'),
