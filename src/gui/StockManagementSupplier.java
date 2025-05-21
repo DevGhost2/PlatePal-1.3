@@ -89,7 +89,14 @@ public class StockManagementSupplier extends javax.swing.JPanel {
 
                     MobileTextField.setText(mobile);
                     EmailTextField.setText(email);
-                    CompanyID.setSelectedItem(companyId);
+
+                    for (int i = 0; i < CompanyID.getItemCount(); i++) {
+                        String item = CompanyID.getItemAt(i);
+                        if (item.startsWith(companyId + " ")) {
+                            CompanyID.setSelectedIndex(i);
+                            break;
+                        }
+                    }
 
                     CompanyID.setEnabled(false);
                     CreateAccount.setEnabled(false);
@@ -601,8 +608,9 @@ public class StockManagementSupplier extends javax.swing.JPanel {
             String name = FNTextField.getText().trim() + " " + LNTextField.getText().trim();
             String mobile = MobileTextField.getText().trim();
             String email = EmailTextField.getText().trim();
-            String selectedCompanyCode = CompanyID.getSelectedItem().toString(); // This is company.companyID (e.g.,
-                                                                                 // "COM123")
+            String selectedCompanyCombo = CompanyID.getSelectedItem().toString();
+            String selectedCompanyCode = selectedCompanyCombo.split(" - ")[0];
+
             System.out.println("########################\n\n\n\n\n");
             System.out.println(selectedCompanyCode);
             System.out.println("\n\n\n\n\n########################");
