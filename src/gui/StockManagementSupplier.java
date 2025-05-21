@@ -85,7 +85,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         try {
             ResultSet rs = MySQL2.executeSearch("SELECT supplier_id FROM supplier");
             while (rs.next()) {
-                String id = rs.getString("supplier_id").replace("ID_", "");
+                String id = rs.getString("supplier_id").replace("SUPP", "");
                 int num = Integer.parseInt(id);
                 if (num > maxId) {
                     maxId = num;
@@ -94,7 +94,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "ID_" + String.format("%04d", maxId + 1);
+        return "SUPP" + String.format("%04d", maxId + 1);
     }
 
     private boolean validateInput(String firstName, String lastName, String mobile, String email) {
@@ -475,7 +475,8 @@ public class StockManagementSupplier extends javax.swing.JPanel {
 
         String SupplierID = generateNewSupplierID();
 
-        String CompanyID = comboValue.split(" - ")[0];
+        String CompanyIDStr = (comboValue.split(" - ")[0].replaceAll("[^\\d]", ""));
+        int CompanyIDInt = Integer.parseInt(CompanyIDStr);
 
         if (!validateInput(firstName, lastName, mobile, email)) {
             return;
@@ -492,8 +493,8 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                 } else {
                     String query = String.format(
                             "INSERT INTO supplier (supplier_id, name, mobile, email, company_id)" +
-                                    "VALUES ( '%s', '%s', '%s', '%s', '%s')",
-                            SupplierID, name, mobile, email, CompanyID);
+                                    "VALUES ( '%s', '%s', '%s', '%s', %d)",
+                            SupplierID, name, mobile, email, CompanyIDInt);
 
                     MySQL2.executeIUD(query);
                     JOptionPane.showMessageDialog(this, "Supplier created successfully!");
