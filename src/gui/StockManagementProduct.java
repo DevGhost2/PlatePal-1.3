@@ -26,6 +26,7 @@ import javax.swing.event.DocumentListener;
 public class StockManagementProduct extends javax.swing.JPanel {
 
     private Timer debounceTimer;
+    private int selectedRow = -1;
 
     /**
      * Creates new form StockManagementProduct
@@ -72,7 +73,7 @@ public class StockManagementProduct extends javax.swing.JPanel {
         ProductTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 if (evt.getClickCount() == 2 && ProductTable.getSelectedRow() != -1) {
-                    int selectedRow = ProductTable.getSelectedRow();
+                    selectedRow = ProductTable.getSelectedRow();
 
                     String prodId = ProductTable.getValueAt(selectedRow, 0).toString();
                     String prodName = ProductTable.getValueAt(selectedRow, 1).toString();
@@ -218,6 +219,7 @@ public class StockManagementProduct extends javax.swing.JPanel {
     private void clearFields() {
         productName.setText("");
         productStatus.setSelectedIndex(0);
+        productSearch.setText("");
 
         productCreate.setEnabled(true);
         productUpdate.setEnabled(false);
@@ -261,7 +263,12 @@ public class StockManagementProduct extends javax.swing.JPanel {
                 },
                 new String[] {
                         "Product ID", "Name", "Status"
-                }));
+                }) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
         jScrollPane1.setViewportView(ProductTable);
 
         jPanel2.setBackground(new java.awt.Color(0, 0, 0));
@@ -433,19 +440,64 @@ public class StockManagementProduct extends javax.swing.JPanel {
 
     private void productUpdateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_productUpdateActionPerformed
         try {
-            int selectedRow = ProductTable.getSelectedRow();
-            if (selectedRow == -1){
+            if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Please Select a Product to update.");
                 return;
             }
 
             String productId = ProductTable.getValueAt(selectedRow, 0).toString();
-            String name = ProductTable.getValueAt(selectedRow, 1).toString();
+            String name = productName.getText().trim();
+            String status = (String) productStatus.getSelectedItem();
+
+            if (!validateInput(name)) {
+                return;
+            }
+
+            String statusQuery = "SELECT id FROM status WHERE status = '" + status.replace("'", "''") + "'";
+            ResultSet statusRs = MySQL2.executeSearch(statusQuery);
+            int statusId = -1;
+            if (statusRs.next()) {
+                statusId = statusRs.getInt("id");
+            } else {
+                JOptionPane.showMessageDialog(this, "Error: Status not found.");
+                return;
+            }
+
+            name = name.replace("'", "''");
+            productId = productId.replace("'", "''");
+            System.out.println("\n\n\n##########################\n\n\n");
+            System.out.println(productId);
+            System.out.println((name));
+            System.out.println(statusId);
+            System.out.println("\n\n\n##########################\n\n\n");
+
+            String updateQuery = "UPDATE stock_product SET " +
+                    "title = '" + name + "', " +
+                    "status_id = " + statusId + " " +
+                    "WHERE stock_product_id = '" + productId + "'";
+
+            int rowsUpdated = MySQL2.executeIUD(updateQuery);
+
+            if (rowsUpdated > 0) {
+                JOptionPane.showMessageDialog(this, "Supplier updated successfully.");
+                loadProductTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to update supplier.");
+            }
+
+            selectedRow = -1;
+            clearFields();
+            loadProductTable();
+            productCreate.setEnabled(true);
+            productUpdate.setEnabled(false);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }// GEN-LAST:event_productUpdateActionPerformed
 
     private void resetNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_resetNameActionPerformed
-        // TODO add your handling code here:
+        clearFields();
     }// GEN-LAST:event_resetNameActionPerformed
 
     private void productSearchActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_productSearchActionPerformed
