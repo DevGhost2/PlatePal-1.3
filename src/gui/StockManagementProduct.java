@@ -4,17 +4,142 @@
  */
 package gui;
 
+import java.sql.ResultSet;
+
+import java.sql.ResultSet;
+import javax.swing.Timer;
+import javax.swing.JOptionPane;
+import javax.swing.event.DocumentListener;
+import model.MySQL2;
+import javax.swing.table.DefaultTableModel;
+import java.sql.PreparedStatement;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 /**
  *
  * @author Oshadha Bhanu
  */
 public class StockManagementProduct extends javax.swing.JPanel {
 
+    private Timer debounceTimer;
+
     /**
      * Creates new form StockManagementProduct
      */
     public StockManagementProduct() {
         initComponents();
+        loadProductTable();
+        loadStatusBox();
+
+        productSearch.getDocument().addDocumentListener(new DocumentListener() {
+            private final int DEBOUNCE_DELAY = 300; // milliseconds
+
+            public void insertUpdate(DocumentEvent e) {
+                debounceSearch();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                debounceSearch();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                debounceSearch();
+            }
+
+            private void debounceSearch() {
+                if (debounceTimer != null && debounceTimer.isRunning()) {
+                    debounceTimer.restart();
+                } else {
+                    debounceTimer = new Timer(DEBOUNCE_DELAY, new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                            searchProducts();
+                            debounceTimer.stop();
+                        }
+                    });
+                    debounceTimer.setRepeats(false);
+                    debounceTimer.start();
+                }
+            }
+        })
+    }
+
+    private void loadProductTable() {
+        DefaultTableModel model = (DefaultTableModel) ProductTable.getModel();
+        model.setRowCount(0);
+
+        String query = "SELECT sp.stock_product_id, sp.title, s.status AS status " +
+                "FROM stock_product sp " +
+                "JOIN status s ON sp.status_id = s.id";
+
+        try {
+            ResultSet rs = MySQL2.executeSearch(query);
+
+            while (rs.next()) {
+                String productID = rs.getString("stock_product_id");
+                String title = rs.getString("title");
+                String status = rs.getString("status");
+
+                model.addRow(new Object[] {
+                        productID,
+                        title,
+                        status
+                });
+
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error loading Product Table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void loadStatusBox() {
+        try {
+            ResultSet rs = MySQL2.executeSearch("SELECT status FROM status");
+            productStatus.removeAllItems();
+            while (rs.next()) {
+                productStatus.addItem(rs.getString("status"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error loading Active Status Selection Box: " + e.getMessage());
+        }
+    }
+
+    private void searchProducts(){
+        String keyword = productSearch.getText().trim();
+        
+        DefaultTableModel model = (DefaultTableModel) ProductTable.getModel();
+        model.setRowCount(0);
+
+        if(keyword.isEmpty()){
+            loadProductTable();
+            return;
+        }
+
+        String query = String.format(
+            "SELECT * FROM stock_product WHERE " +
+            "stock_product_id LIKE '%%%s%%' OR "+
+            "title LIKE '%%%s%%'",
+            keyword,keyword);
+        
+        try {
+            ResultSet rs = MySQL2.executeSearch(query);
+
+            boolean hasResults = false;
+
+            while (rs.next()){
+                hasResults = true;
+
+                String productID = rs.getString("stock_product_id");
+                String title = rs.getString("title");
+                String status
+
+            }
+        }
+
     }
 
     /**
@@ -24,7 +149,8 @@ public class StockManagementProduct extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -44,16 +170,20 @@ public class StockManagementProduct extends javax.swing.JPanel {
 
         ProductTable.setBackground(new java.awt.Color(0, 0, 0));
         ProductTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Product ID", "Name", "Status"
+                new Object[][] {
+                        { null, null, null },
+                        { null, null, null },
+                        { null, null, null },
+                        { null, null, null }
+                },
+                new String[] {
+                        "Product ID", "Name", "Status"
+                }) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
             }
-        ));
+        });
         jScrollPane1.setViewportView(ProductTable);
 
         jPanel2.setBackground(new java.awt.Color(0, 0, 0));
@@ -83,7 +213,8 @@ public class StockManagementProduct extends javax.swing.JPanel {
             }
         });
 
-        productStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        productStatus.setModel(
+                new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         productStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 productStatusActionPerformed(evt);
@@ -101,40 +232,54 @@ public class StockManagementProduct extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(productName, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(productStatus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(112, 112, 112)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(productUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(resetName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(productCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(17, 17, 17)
+                                                .addGroup(jPanel2Layout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel1)
+                                                        .addComponent(productName,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 346,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(productStatus,
+                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 113,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(112, 112, 112)
+                                                .addGroup(jPanel2Layout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
+                                                                false)
+                                                        .addComponent(productUpdate,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(resetName, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(productCreate,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 113,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addContainerGap(18, Short.MAX_VALUE)));
         jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(productName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(productStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(productCreate)
-                .addGap(18, 18, 18)
-                .addComponent(productUpdate)
-                .addGap(18, 18, 18)
-                .addComponent(resetName)
-                .addGap(101, 101, 101))
-        );
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(60, 60, 60)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(productName, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(productStatus, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(productCreate)
+                                .addGap(18, 18, 18)
+                                .addComponent(productUpdate)
+                                .addGap(18, 18, 18)
+                                .addComponent(resetName)
+                                .addGap(101, 101, 101)));
 
         jPanel3.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -155,69 +300,76 @@ public class StockManagementProduct extends javax.swing.JPanel {
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(productSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53)
-                .addComponent(searchReset)
-                .addContainerGap(119, Short.MAX_VALUE))
-        );
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addComponent(productSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 392,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(53, 53, 53)
+                                .addComponent(searchReset)
+                                .addContainerGap(119, Short.MAX_VALUE)));
         jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(productSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchReset))
-                .addContainerGap(56, Short.MAX_VALUE))
-        );
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(56, 56, 56)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(productSearch, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(searchReset))
+                                .addContainerGap(56, Short.MAX_VALUE)));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 683, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 683,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, 0)));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, 0))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(0, 0, 0)
+                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 387,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, 0)));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void productNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productNameActionPerformed
+    private void productNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_productNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_productNameActionPerformed
+    }// GEN-LAST:event_productNameActionPerformed
 
-    private void productUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productUpdateActionPerformed
+    private void productUpdateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_productUpdateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_productUpdateActionPerformed
+    }// GEN-LAST:event_productUpdateActionPerformed
 
-    private void resetNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetNameActionPerformed
+    private void resetNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_resetNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_resetNameActionPerformed
+    }// GEN-LAST:event_resetNameActionPerformed
 
-    private void productSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productSearchActionPerformed
+    private void productSearchActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_productSearchActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_productSearchActionPerformed
+    }// GEN-LAST:event_productSearchActionPerformed
 
-    private void searchResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchResetActionPerformed
+    private void searchResetActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_searchResetActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_searchResetActionPerformed
+    }// GEN-LAST:event_searchResetActionPerformed
 
     private void productCreateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_productCreateActionPerformed
         // TODO add your handling code here:

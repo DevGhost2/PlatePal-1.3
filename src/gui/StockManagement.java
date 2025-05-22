@@ -37,6 +37,7 @@ public class StockManagement extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -54,7 +55,7 @@ public class StockManagement extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        Product = new javax.swing.JButton();
         jButton10 = new javax.swing.JButton();
         jButton11 = new javax.swing.JButton();
         jButton12 = new javax.swing.JButton();
@@ -236,14 +237,14 @@ public class StockManagement extends javax.swing.JFrame {
         jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-box-25.png"))); // NOI18N
         jButton8.setText("                           STOCK");
 
-        jButton9.setBackground(new java.awt.Color(51, 51, 51));
-        jButton9.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
-        jButton9.setForeground(new java.awt.Color(255, 255, 255));
-        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-inventory-25.png"))); // NOI18N
-        jButton9.setText("PRODUCT");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        Product.setBackground(new java.awt.Color(51, 51, 51));
+        Product.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
+        Product.setForeground(new java.awt.Color(255, 255, 255));
+        Product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-inventory-25.png"))); // NOI18N
+        Product.setText("PRODUCT");
+        Product.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                ProductActionPerformed(evt);
             }
         });
 
@@ -321,7 +322,7 @@ public class StockManagement extends javax.swing.JFrame {
                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        .addComponent(Product, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -370,7 +371,7 @@ public class StockManagement extends javax.swing.JFrame {
                                 .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 40,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 40,
+                                .addComponent(Product, javax.swing.GroupLayout.PREFERRED_SIZE, 40,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 40,
@@ -535,6 +536,13 @@ public class StockManagement extends javax.swing.JFrame {
         SwingUtilities.updateComponentTreeUI(jPanel6);
     }// GEN-LAST:event_jButton11ActionPerformed
 
+    private void ProductActionPerformed(java.awt.event.ActionEvent evt) {
+        StockManagementProduct SMProduct = new StockManagementProduct();
+        jPanel6.removeAll();
+        jPanel6.add(SMProduct, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
+    }
+
     private void menuExpandLeft() {
         jButton6.setVisible(true);
         jButton5.setVisible(false);
@@ -542,7 +550,7 @@ public class StockManagement extends javax.swing.JFrame {
         jButton6.setText("");
         jButton7.setText("");
         jButton8.setText("");
-        jButton9.setText("");
+        Product.setText("");
         jButton10.setText("");
         jButton11.setText("");
         jButton12.setText("");
@@ -583,7 +591,7 @@ public class StockManagement extends javax.swing.JFrame {
         jButton6.setText("                          PROFILE");
         jButton7.setText("                 DASHBOARD");
         jButton8.setText("                           STOCK");
-        jButton9.setText("                    INVENTORY");
+        Product.setText("                    INVENTORY");
         jButton10.setText("                               GRN");
         jButton11.setText("                        SUPPLIER");
         jButton12.setText("                               AOD");
@@ -642,6 +650,7 @@ public class StockManagement extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Product;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
@@ -658,7 +667,6 @@ public class StockManagement extends javax.swing.JFrame {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

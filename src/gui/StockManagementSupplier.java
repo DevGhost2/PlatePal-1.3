@@ -243,22 +243,25 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         model.setRowCount(0); // Clear table
 
         if (keyword.isEmpty()) {
-            loadSupplierTable();
+            loadSupplierTable(); // fallback to full table load
             return;
         }
 
         String query = String.format(
-                "SELECT * FROM supplier WHERE " +
-                        "supplier_id LIKE '%%%s%%' OR " +
-                        "name LIKE '%%%s%%' OR " +
-                        "mobile LIKE '%%%s%%' OR " +
-                        "email LIKE '%%%s%%' OR " +
-                        "company_id LIKE '%%%s%%'",
-                keyword, keyword, keyword, keyword, keyword);
+                "SELECT s.supplier_id, s.name, s.mobile, s.email, c.company_id, st.status " +
+                        "FROM supplier s " +
+                        "JOIN company c ON s.company_id = c.id " +
+                        "JOIN status st ON s.status_id = st.id " +
+                        "WHERE s.supplier_id LIKE '%%%s%%' OR " +
+                        "s.name LIKE '%%%s%%' OR " +
+                        "s.mobile LIKE '%%%s%%' OR " +
+                        "s.email LIKE '%%%s%%' OR " +
+                        "c.company_id LIKE '%%%s%%' OR " +
+                        "st.status LIKE '%%%s%%'",
+                keyword, keyword, keyword, keyword, keyword, keyword);
 
         try {
             ResultSet rs = MySQL2.executeSearch(query);
-
             boolean hasResults = false;
 
             while (rs.next()) {
@@ -268,9 +271,10 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                 String supplierName = rs.getString("name");
                 String mobile = rs.getString("mobile");
                 String email = rs.getString("email");
-                String companyID = rs.getString("company_id");
+                String companyId = rs.getString("company_id"); // from company table
+                String status = rs.getString("status"); // from status table
 
-                model.addRow(new Object[] { supplierId, supplierName, mobile, email, companyID });
+                model.addRow(new Object[] { supplierId, supplierName, mobile, email, companyId, status });
             }
 
             if (!hasResults) {
@@ -851,7 +855,8 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                     clearFields();
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Error creating supplier: " + e.getMessage());
+                JOptionPane.showMessageDialog(this, "Error creating supplier: " + e.getMessage(), "Error:",
+                        JOptionPane.WARNING_MESSAGE);
                 e.printStackTrace();
             }
         }
