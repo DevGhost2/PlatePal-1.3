@@ -465,11 +465,6 @@ public class StockManagementProduct extends javax.swing.JPanel {
 
             name = name.replace("'", "''");
             productId = productId.replace("'", "''");
-            System.out.println("\n\n\n##########################\n\n\n");
-            System.out.println(productId);
-            System.out.println((name));
-            System.out.println(statusId);
-            System.out.println("\n\n\n##########################\n\n\n");
 
             String updateQuery = "UPDATE stock_product SET " +
                     "title = '" + name + "', " +
