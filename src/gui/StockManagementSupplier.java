@@ -24,6 +24,7 @@ import javax.swing.event.DocumentListener;
 public class StockManagementSupplier extends javax.swing.JPanel {
 
     private Timer debounceTimer;
+    private int selectedRow = -1;
 
     /**
      * Creates new form StockManagementSupplier
@@ -72,7 +73,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         SupplierTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 if (evt.getClickCount() == 2 && SupplierTable.getSelectedRow() != -1) {
-                    int selectedRow = SupplierTable.getSelectedRow();
+                    selectedRow = SupplierTable.getSelectedRow();
 
                     String supplierId = SupplierTable.getValueAt(selectedRow, 0).toString();
                     String supplierName = SupplierTable.getValueAt(selectedRow, 1).toString();
@@ -179,6 +180,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         MobileTextField.setText("");
         EmailTextField.setText("");
         CompanyID.setSelectedIndex(0);
+        StatusBox.setSelectedItem(0);
 
         UpdateAccount.setEnabled(false);
         CreateAccount.setEnabled(true);
@@ -205,7 +207,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
     private boolean validateInput(String firstName, String lastName, String mobile, String email) {
         StringBuilder errorMsg = new StringBuilder();
 
-        String nameRegex = "^[A-Za-z][A-Za-z\\s\\-']{1,}$";
+        String nameRegex = "^[A-Za-z][A-Za-z\\s\\-']{2,}$";
         String mobileRegex = "^(07\\d{8})$";
         String emailRegex = "^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,6}$";
 
@@ -724,7 +726,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
 
     private void UpdateAccountActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_UpdateAccountActionPerformed
         try {
-            int selectedRow = SupplierTable.getSelectedRow();
+            // int selectedRow = SupplierTable.getSelectedRow();
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Please select a supplier to update.");
                 return;
@@ -742,7 +744,6 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                 return;
             }
 
-            // 🔍 Step 1: Get company_id from company table using company_id string
             String companyQuery = "SELECT id FROM company WHERE company_id = '" +
                     selectedCompanyCode.replace("'", "''") + "'";
             ResultSet companyRs = MySQL2.executeSearch(companyQuery);
@@ -754,7 +755,6 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                 return;
             }
 
-            // 🔍 Step 2: Get status_id from status table using status name
             String statusQuery = "SELECT id FROM status WHERE status = '" + status.replace("'", "''") + "'";
             ResultSet statusRs = MySQL2.executeSearch(statusQuery);
             int statusId = -1;
@@ -765,7 +765,6 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                 return;
             }
 
-            // 👷 Build the UPDATE query
             name = name.replace("'", "''");
             mobile = mobile.replace("'", "''");
             email = email.replace("'", "''");
@@ -782,11 +781,12 @@ public class StockManagementSupplier extends javax.swing.JPanel {
 
             if (rowsUpdated > 0) {
                 JOptionPane.showMessageDialog(this, "Supplier updated successfully.");
-                loadSupplierTable(); // Refresh table
+                loadSupplierTable();
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to update supplier.");
             }
 
+            selectedRow = -1;
             clearFields();
             UpdateAccount.setEnabled(false);
             CreateAccount.setEnabled(true);
@@ -796,9 +796,9 @@ public class StockManagementSupplier extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
             e.printStackTrace();
         }
-    }// GEN-LAST:event_UpdateAccountActionPerformed
+    }
 
-    private void CreateAccountActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_CreateAccountActionPerformed
+    private void CreateAccountActionPerformed(java.awt.event.ActionEvent evt) {
         String firstName = FNTextField.getText().trim();
         String lastName = LNTextField.getText().trim();
         String name = firstName + " " + lastName;
@@ -817,7 +817,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
 
         } else {
             try {
-                // Check for duplicates
+
                 String checkQuery = String.format("SELECT * FROM supplier WHERE supplier_id = '%s' OR email = '%s'",
                         SupplierID, email);
                 ResultSet rs = MySQL2.executeSearch(checkQuery);
@@ -825,7 +825,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                 if (rs.next()) {
                     JOptionPane.showMessageDialog(this, "A supplier with this ID or email already exists!");
                 } else {
-                    // 🔍 Find status_id from status table
+
                     String statusQuery = "SELECT id FROM status WHERE status = '" + status.replace("'", "''") + "'";
                     ResultSet statusRs = MySQL2.executeSearch(statusQuery);
                     int statusId = -1;
@@ -837,7 +837,6 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                         return;
                     }
 
-                    // 👷 Insert supplier with status_id
                     String query = String.format(
                             "INSERT INTO supplier (supplier_id, name, mobile, email, company_id, status_id) " +
                                     "VALUES ('%s', '%s', '%s', '%s', %d, %d)",
@@ -860,7 +859,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                 e.printStackTrace();
             }
         }
-    }// GEN-LAST:event_CreateAccountActionPerformed
+    }
 
     private void ResetRegistrationActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ResetRegistrationActionPerformed
         clearFields();
