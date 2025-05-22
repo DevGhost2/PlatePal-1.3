@@ -63,7 +63,7 @@ public class StockManagementProduct extends javax.swing.JPanel {
                     debounceTimer.start();
                 }
             }
-        })
+        });
     }
 
     private void loadProductTable() {
@@ -108,36 +108,49 @@ public class StockManagementProduct extends javax.swing.JPanel {
         }
     }
 
-    private void searchProducts(){
+    private void searchProducts() {
         String keyword = productSearch.getText().trim();
-        
+
         DefaultTableModel model = (DefaultTableModel) ProductTable.getModel();
         model.setRowCount(0);
 
-        if(keyword.isEmpty()){
+        if (keyword.isEmpty()) {
             loadProductTable();
             return;
         }
 
         String query = String.format(
-            "SELECT * FROM stock_product WHERE " +
-            "stock_product_id LIKE '%%%s%%' OR "+
-            "title LIKE '%%%s%%'",
-            keyword,keyword);
-        
+                "SELECT p.stock_product_id, p.title, st.status " +
+                        "FROM stock_product p " +
+                        "JOIN status st ON p.status_id = st.id " +
+                        "WHERE p.stock_product_id LIKE '%%%s%%' OR " +
+                        "p.title LIKE '%%%s%%' OR " +
+                        "st.status LIKE '%%%s%%'",
+                keyword, keyword, keyword);
+
         try {
             ResultSet rs = MySQL2.executeSearch(query);
 
             boolean hasResults = false;
 
-            while (rs.next()){
+            while (rs.next()) {
                 hasResults = true;
 
-                String productID = rs.getString("stock_product_id");
+                String stockProductID = rs.getString("stock_product_id");
                 String title = rs.getString("title");
-                String status
+                String status = rs.getString("status");
+
+                model.addRow(new Object[] { stockProductID, title, status });
 
             }
+
+            if (!hasResults) {
+                JOptionPane.showMessageDialog(this, "No Stock Products matched your search!", "No Results",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error searching supplier data: " + e.getMessage());
+            e.printStackTrace();
         }
 
     }
