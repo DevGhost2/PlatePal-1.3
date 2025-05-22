@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `category` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.category: ~0 rows (approximately)
+-- Dumping data for table 123.category: ~3 rows (approximately)
 INSERT INTO `category` (`id`, `name`) VALUES
 
 	(0, 'All'),
@@ -179,6 +179,29 @@ CREATE TABLE IF NOT EXISTS `employee_attendance` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table 123.employee_attendance: ~0 rows (approximately)
+
+-- Dumping structure for table 123.employee_requests
+CREATE TABLE IF NOT EXISTS `employee_requests` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `request_id` varchar(10) NOT NULL,
+  `employee_id` int NOT NULL,
+  `request_type` varchar(50) NOT NULL,
+  `description` text NOT NULL,
+  `date_submitted` datetime NOT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'Pending',
+  `priority` varchar(10) NOT NULL DEFAULT 'Medium',
+  `admin_response` text,
+  `admin_id` int DEFAULT NULL,
+  `response_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `request_id` (`request_id`),
+  KEY `fk_employee_requests_employee1_idx` (`employee_id`),
+  KEY `fk_employee_requests_admin1_idx` (`admin_id`),
+  CONSTRAINT `fk_employee_requests_admin1` FOREIGN KEY (`admin_id`) REFERENCES `employee` (`id`),
+  CONSTRAINT `fk_employee_requests_employee1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- Dumping data for table 123.employee_requests: ~0 rows (approximately)
 
 -- Dumping structure for table 123.employee_role
 CREATE TABLE IF NOT EXISTS `employee_role` (
@@ -324,6 +347,20 @@ CREATE TABLE IF NOT EXISTS `payment_method` (
 
 -- Dumping data for table 123.payment_method: ~0 rows (approximately)
 
+-- Dumping structure for table 123.petty_cash
+CREATE TABLE IF NOT EXISTS `petty_cash` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) NOT NULL,
+  `amount` double NOT NULL,
+  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `employee_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_employee` (`employee_id`),
+  CONSTRAINT `fk_employee` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table 123.petty_cash: ~0 rows (approximately)
+
 -- Dumping structure for table 123.product
 CREATE TABLE IF NOT EXISTS `product` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -334,6 +371,7 @@ CREATE TABLE IF NOT EXISTS `product` (
   `added_date` datetime NOT NULL,
   `product_status_id` int NOT NULL,
   `sub_category_id` int NOT NULL,
+  `sellingCount` int DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `product_id` (`product_id`),
   KEY `fk_product_product_status1_idx` (`product_status_id`),
@@ -342,26 +380,26 @@ CREATE TABLE IF NOT EXISTS `product` (
   CONSTRAINT `fk_product_sub_category1` FOREIGN KEY (`sub_category_id`) REFERENCES `sub_category` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.product: ~0 rows (approximately)
-INSERT INTO `product` (`id`, `title`, `product_id`, `description`, `added_date`, `product_status_id`, `sub_category_id`) VALUES
-	(1, 'Vegetable Rice', 'pdct001', 'dadadeaw', '2025-05-21 22:10:07', 1, 1),
-	(2, 'Egg Rice', 'pdct002', NULL, '2025-05-21 22:10:46', 1, 1),
-	(3, 'Chicken Rice', 'pdct003', NULL, '2025-05-21 22:11:13', 1, 1),
-	(4, 'Pork Rice', 'pdct004', NULL, '2025-05-21 22:11:39', 1, 1),
-	(5, 'Fish Rice', 'pdct005', NULL, '2025-05-21 22:12:32', 1, 1),
-	(6, 'Cea Food Rice', 'pdct006', NULL, '2025-05-21 22:12:52', 1, 1),
-	(7, 'Mixed Rice', 'pdct007', NULL, '2025-05-21 22:13:25', 1, 1),
-	(8, 'Cheese Rice', 'pdct008', NULL, '2025-05-21 22:14:28', 1, 1),
-	(9, 'Vegetable Kottu', 'pdct009', NULL, '2025-05-21 22:15:51', 1, 2),
-	(10, 'Egg Kottu', 'pdct010', NULL, '2025-05-21 22:16:34', 1, 2),
-	(11, 'Chicken Kottu', 'pdct011', NULL, '2025-05-21 22:17:05', 1, 2),
-	(12, 'Pork Kottu', 'pdct012', NULL, '2025-05-21 22:17:59', 1, 2),
-	(13, 'Fish Kottu', 'pdct013', NULL, '2025-05-21 22:18:52', 1, 2),
-	(14, 'Cea Food Kottu', 'pdct014', NULL, '2025-05-21 22:19:19', 1, 2),
-	(15, 'Mixed Kottu', 'pdct015', NULL, '2025-05-21 22:20:00', 1, 2),
-	(16, 'Cheese Kottu', 'pdct016', NULL, '2025-05-21 22:21:32', 1, 2),
-	(17, 'Noodles Kottu', 'pdct017', NULL, '2025-05-21 22:21:56', 1, 2),
-	(18, 'String Hopper Kottu', 'pdct018', NULL, '2025-05-21 22:22:42', 1, 2);
+-- Dumping data for table 123.product: ~18 rows (approximately)
+INSERT INTO `product` (`id`, `title`, `product_id`, `description`, `added_date`, `product_status_id`, `sub_category_id`, `sellingCount`) VALUES
+	(1, 'Vegetable Rice', 'pdct001', 'dadadeaw', '2025-05-21 22:10:07', 1, 1, 21),
+	(2, 'Egg Rice', 'pdct002', NULL, '2025-05-21 22:10:46', 1, 1, 32),
+	(3, 'Chicken Rice', 'pdct003', NULL, '2025-05-21 22:11:13', 1, 1, 345),
+	(4, 'Pork Rice', 'pdct004', NULL, '2025-05-21 22:11:39', 1, 1, 100),
+	(5, 'Fish Rice', 'pdct005', NULL, '2025-05-21 22:12:32', 1, 1, 48),
+	(6, 'Cea Food Rice', 'pdct006', NULL, '2025-05-21 22:12:52', 1, 1, 60),
+	(7, 'Mixed Rice', 'pdct007', NULL, '2025-05-21 22:13:25', 1, 1, 97),
+	(8, 'Cheese Rice', 'pdct008', NULL, '2025-05-21 22:14:28', 1, 1, 22),
+	(9, 'Vegetable Kottu', 'pdct009', NULL, '2025-05-21 22:15:51', 1, 2, 44),
+	(10, 'Egg Kottu', 'pdct010', NULL, '2025-05-21 22:16:34', 1, 2, 67),
+	(11, 'Chicken Kottu', 'pdct011', NULL, '2025-05-21 22:17:05', 1, 2, 600),
+	(12, 'Pork Kottu', 'pdct012', NULL, '2025-05-21 22:17:59', 1, 2, 307),
+	(13, 'Fish Kottu', 'pdct013', NULL, '2025-05-21 22:18:52', 1, 2, 27),
+	(14, 'Cea Food Kottu', 'pdct014', NULL, '2025-05-21 22:19:19', 1, 2, 75),
+	(15, 'Mixed Kottu', 'pdct015', NULL, '2025-05-21 22:20:00', 1, 2, 267),
+	(16, 'Cheese Kottu', 'pdct016', NULL, '2025-05-21 22:21:32', 1, 2, 127),
+	(17, 'Noodles Kottu', 'pdct017', NULL, '2025-05-21 22:21:56', 1, 2, 65),
+	(18, 'String Hopper Kottu', 'pdct018', NULL, '2025-05-21 22:22:42', 1, 2, 45);
 
 -- Dumping structure for table 123.product_has_size
 CREATE TABLE IF NOT EXISTS `product_has_size` (
@@ -387,9 +425,30 @@ CREATE TABLE IF NOT EXISTS `product_images` (
   KEY `fk_product_images_product1_idx` (`product_id`),
   CONSTRAINT `fk_product_images_product1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
 
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.product_images: ~0 rows (approximately)
+-- Dumping data for table 123.product_images: ~17 rows (approximately)
+INSERT INTO `product_images` (`id`, `url`, `product_id`) VALUES
+	(1, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 1),
+	(2, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 2),
+	(3, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\icons8-cheeseburger-40.png', 3),
+	(4, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 4),
+	(5, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 5),
+	(6, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 6),
+	(7, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 7),
+	(8, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 8),
+	(9, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 9),
+	(10, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 10),
+	(11, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 11),
+	(12, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 12),
+	(13, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 13),
+	(14, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 14),
+	(15, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 15),
+	(16, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 16),
+	(17, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 17),
+	(18, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 18);
+
+
 -- Dumping structure for table 123.product_status
 CREATE TABLE IF NOT EXISTS `product_status` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -397,7 +456,7 @@ CREATE TABLE IF NOT EXISTS `product_status` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.product_status: ~0 rows (approximately)
+-- Dumping data for table 123.product_status: ~2 rows (approximately)
 INSERT INTO `product_status` (`id`, `name`) VALUES
 	(1, 'Active'),
 
@@ -463,11 +522,27 @@ CREATE TABLE IF NOT EXISTS `request` (
 -- Dumping data for table 123.request: ~0 rows (approximately)
 
 
+-- Dumping structure for table 123.request_type
+CREATE TABLE IF NOT EXISTS `request_type` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `type_name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
+
+-- Dumping data for table 123.request_type: ~6 rows (approximately)
+INSERT INTO `request_type` (`id`, `type_name`) VALUES
+	(1, 'Leave Request'),
+	(2, 'Equipment Request'),
+	(3, 'Overtime Request'),
+	(4, 'Schedule Change'),
+	(5, 'Training Request'),
+	(6, 'Other');
+
 -- Dumping structure for table 123.salary_payments
 CREATE TABLE IF NOT EXISTS `salary_payments` (
   `id` int NOT NULL AUTO_INCREMENT,
   `salary_payments_id` varchar(10) NOT NULL,
-  `paid_date` date NOT NULL,
+  `paid_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `paid_amount` double NOT NULL,
   `total_regular_hours` double NOT NULL,
   `total_ot_hours` double NOT NULL,
@@ -479,15 +554,6 @@ CREATE TABLE IF NOT EXISTS `salary_payments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table 123.salary_payments: ~0 rows (approximately)
-
--- Dumping structure for table 123.selling_status
-CREATE TABLE IF NOT EXISTS `selling_status` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `status` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- Dumping data for table 123.selling_status: ~0 rows (approximately)
 
 -- Dumping structure for table 123.size
 CREATE TABLE IF NOT EXISTS `size` (
@@ -502,12 +568,12 @@ CREATE TABLE IF NOT EXISTS `size` (
 -- Dumping structure for table 123.status
 CREATE TABLE IF NOT EXISTS `status` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `staus` varchar(15) NOT NULL,
+  `status` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table 123.status: ~0 rows (approximately)
-INSERT INTO `status` (`id`, `staus`) VALUES
+INSERT INTO `status` (`id`, `status`) VALUES
 	(1, 'Active'),
 	(2, 'Deactive');
 
@@ -553,14 +619,11 @@ CREATE TABLE IF NOT EXISTS `stock_product` (
   `id` int NOT NULL AUTO_INCREMENT,
   `stock_product_id` varchar(10) NOT NULL,
   `title` varchar(45) NOT NULL,
-  `product_status_id` int NOT NULL,
-  `selling_status_id` int NOT NULL,
+  `status_id` int NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `stock_product_id` (`stock_product_id`),
-  KEY `fk_stock_product_product_status1_idx` (`product_status_id`),
-  KEY `fk_stock_product_selling_status1_idx` (`selling_status_id`),
-  CONSTRAINT `fk_stock_product_product_status1` FOREIGN KEY (`product_status_id`) REFERENCES `product_status` (`id`),
-  CONSTRAINT `fk_stock_product_selling_status1` FOREIGN KEY (`selling_status_id`) REFERENCES `selling_status` (`id`)
+  KEY `fk_stock_product_status1_idx` (`status_id`),
+  CONSTRAINT `fk_stock_product_status1` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table 123.stock_product: ~0 rows (approximately)
@@ -583,17 +646,15 @@ INSERT INTO `sub_category` (`id`, `title`, `category_id`, `image`, `sellCount`) 
 	(0, 'All', 0, '', 10000),
 	(1, 'Rice', 1, '', 100),
 	(2, 'Kottu', 1, '', 200),
-	(3, 'Deval', 2, '', 0),
-	(4, 'Smoothies', 2, '', 0),
-	(5, 'Biriyani', 1, '', 0),
-	(6, 'Nasi Guran', 1, '', 0),
-	(7, 'Soft Drinks', 2, '', 0),
-	(8, 'Noodles', 1, '', 0),
-	(9, 'String Hoppers', 1, '', 0),
-	(10, 'Tea', 2, '', 0),
-	(11, 'Short Eats', 1, '', 0),
-	(12, 'Burgers', 1, '', 0),
-	(13, 'Pizza', 1, '', 0);
+	(3, 'Biriyani', 2, '', 0),
+	(4, 'Nasiguran', 2, '', 0),
+	(5, 'Burger', 1, '', 0),
+	(6, 'Pizza', 1, '', 0),
+	(7, 'Noodless', 2, '', 0),
+	(8, 'Devil', 1, '', 0),
+	(9, 'Soup', 1, '', 0),
+	(10, 'Shorteats', 2, '', 0),
+	(11, 'Drinks', 1, '', 0);
 
 
 -- Dumping structure for table 123.supplier
@@ -605,7 +666,8 @@ CREATE TABLE IF NOT EXISTS `supplier` (
   `email` varchar(100) NOT NULL,
   `company_id` int NOT NULL,
 
-  `status_id` int NOT NULL DEFAULT '1',
+  `status_id` int NOT NULL,
+
   PRIMARY KEY (`id`),
   UNIQUE KEY `supplier_id` (`supplier_id`),
   KEY `fk_supplier_company1_idx` (`company_id`),
