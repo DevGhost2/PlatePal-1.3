@@ -237,7 +237,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jButton11" alignment="0" max="32767" attributes="0"/>
                           <Component id="jButton10" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jButton9" alignment="0" max="32767" attributes="0"/>
+                          <Component id="Product" alignment="0" max="32767" attributes="0"/>
                           <Component id="jButton8" alignment="0" max="32767" attributes="0"/>
                           <Component id="jButton7" alignment="0" max="32767" attributes="0"/>
                           <Component id="jButton6" alignment="1" max="32767" attributes="0"/>
@@ -273,7 +273,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButton8" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButton9" min="-2" pref="40" max="-2" attributes="0"/>
+                      <Component id="Product" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButton10" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -383,7 +383,7 @@
                 <Property name="text" type="java.lang.String" value="                           STOCK"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton9">
+            <Component class="javax.swing.JButton" name="Product">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="33" green="33" red="33" type="rgb"/>
@@ -397,8 +397,11 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/resourcess/icons8-inventory-25.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="                    INVENTORY"/>
+                <Property name="text" type="java.lang.String" value="PRODUCT"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ProductActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="jButton10">
               <Properties>

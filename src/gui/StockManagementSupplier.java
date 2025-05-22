@@ -24,6 +24,7 @@ import javax.swing.event.DocumentListener;
 public class StockManagementSupplier extends javax.swing.JPanel {
 
     private Timer debounceTimer;
+    private int selectedRow = -1;
 
     /**
      * Creates new form StockManagementSupplier
@@ -32,6 +33,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         initComponents();
         loadCompanyIDs();
         loadSupplierTable();
+        loadActiveBox();
 
         SearchBar.getDocument().addDocumentListener(new DocumentListener() {
             private final int DEBOUNCE_DELAY = 300; // milliseconds
@@ -71,17 +73,14 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         SupplierTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 if (evt.getClickCount() == 2 && SupplierTable.getSelectedRow() != -1) {
-                    int selectedRow = SupplierTable.getSelectedRow();
+                    selectedRow = SupplierTable.getSelectedRow();
 
                     String supplierId = SupplierTable.getValueAt(selectedRow, 0).toString();
                     String supplierName = SupplierTable.getValueAt(selectedRow, 1).toString();
                     String mobile = SupplierTable.getValueAt(selectedRow, 2).toString();
                     String email = SupplierTable.getValueAt(selectedRow, 3).toString();
                     String companyId = SupplierTable.getValueAt(selectedRow, 4).toString();
-
-                    System.out.println("########################\n\n\n\n\n");
-                    System.out.println(companyId);
-                    System.out.println("\n\n\n\n\n########################");
+                    String status = SupplierTable.getValueAt(selectedRow, 5).toString();
 
                     String[] nameParts = supplierName.split(" ", 2);
                     FNTextField.setText(nameParts[0]);
@@ -89,6 +88,8 @@ public class StockManagementSupplier extends javax.swing.JPanel {
 
                     MobileTextField.setText(mobile);
                     EmailTextField.setText(email);
+
+                    StatusBox.setSelectedItem(status);
 
                     for (int i = 0; i < CompanyID.getItemCount(); i++) {
                         String item = CompanyID.getItemAt(i);
@@ -114,7 +115,6 @@ public class StockManagementSupplier extends javax.swing.JPanel {
             while (rs.next()) {
                 CompanyID.addItem(rs.getString("company_id") + " - " + rs.getString("name"));
             }
-            // close connection
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,15 +122,32 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         }
     }
 
+    private void loadActiveBox() {
+        try {
+            ResultSet rs = MySQL2.executeSearch("SELECT status FROM status");
+            StatusBox.removeAllItems();
+            while (rs.next()) {
+                StatusBox.addItem(rs.getString("status"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error loading Active Status Selection Box: " + e.getMessage());
+        }
+    }
+
     private void loadSupplierTable() {
         DefaultTableModel model = (DefaultTableModel) SupplierTable.getModel();
         model.setRowCount(0);
 
-        // String query = "SELECT supplier_id, name, name AS first_name, mobile, email,
-        // 'No Address' AS address FROM supplier";
-        String query = "SELECT s.supplier_id, s.name, s.mobile, s.email, c.company_id " +
+        // String query = "SELECT s.supplier_id, s.name, s.mobile, s.email,
+        // c.company_id, " +
+        // "FROM supplier s " +
+        // "JOIN company c ON s.company_id = c.id";
+
+        String query = "SELECT s.supplier_id, s.name, s.mobile, s.email, c.company_id, st.status " +
                 "FROM supplier s " +
-                "JOIN company c ON s.company_id = c.id";
+                "JOIN company c ON s.company_id = c.id " +
+                "JOIN status st ON s.status_id = st.id";
 
         try {
             ResultSet rs = MySQL2.executeSearch(query);
@@ -141,12 +158,14 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                 String mobile = rs.getString("mobile");
                 String email = rs.getString("email");
                 String companyID = rs.getString("company_id");
+                String statusID = rs.getString("status");
 
                 model.addRow(new Object[] { supplierId,
                         supplierName,
                         mobile,
                         email,
-                        companyID
+                        companyID,
+                        statusID
                 });
             }
         } catch (Exception e) {
@@ -161,6 +180,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         MobileTextField.setText("");
         EmailTextField.setText("");
         CompanyID.setSelectedIndex(0);
+        StatusBox.setSelectedItem(0);
 
         UpdateAccount.setEnabled(false);
         CreateAccount.setEnabled(true);
@@ -187,7 +207,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
     private boolean validateInput(String firstName, String lastName, String mobile, String email) {
         StringBuilder errorMsg = new StringBuilder();
 
-        String nameRegex = "^[A-Za-z][A-Za-z\\s\\-']{1,}$";
+        String nameRegex = "^[A-Za-z][A-Za-z\\s\\-']{2,}$";
         String mobileRegex = "^(07\\d{8})$";
         String emailRegex = "^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,6}$";
 
@@ -225,22 +245,25 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         model.setRowCount(0); // Clear table
 
         if (keyword.isEmpty()) {
-            loadSupplierTable();
+            loadSupplierTable(); // fallback to full table load
             return;
         }
 
         String query = String.format(
-                "SELECT * FROM supplier WHERE " +
-                        "supplier_id LIKE '%%%s%%' OR " +
-                        "name LIKE '%%%s%%' OR " +
-                        "mobile LIKE '%%%s%%' OR " +
-                        "email LIKE '%%%s%%' OR " +
-                        "company_id LIKE '%%%s%%'",
-                keyword, keyword, keyword, keyword, keyword);
+                "SELECT s.supplier_id, s.name, s.mobile, s.email, c.company_id, st.status " +
+                        "FROM supplier s " +
+                        "JOIN company c ON s.company_id = c.id " +
+                        "JOIN status st ON s.status_id = st.id " +
+                        "WHERE s.supplier_id LIKE '%%%s%%' OR " +
+                        "s.name LIKE '%%%s%%' OR " +
+                        "s.mobile LIKE '%%%s%%' OR " +
+                        "s.email LIKE '%%%s%%' OR " +
+                        "c.company_id LIKE '%%%s%%' OR " +
+                        "st.status LIKE '%%%s%%'",
+                keyword, keyword, keyword, keyword, keyword, keyword);
 
         try {
             ResultSet rs = MySQL2.executeSearch(query);
-
             boolean hasResults = false;
 
             while (rs.next()) {
@@ -250,9 +273,10 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                 String supplierName = rs.getString("name");
                 String mobile = rs.getString("mobile");
                 String email = rs.getString("email");
-                String companyID = rs.getString("company_id");
+                String companyId = rs.getString("company_id"); // from company table
+                String status = rs.getString("status"); // from status table
 
-                model.addRow(new Object[] { supplierId, supplierName, mobile, email, companyID });
+                model.addRow(new Object[] { supplierId, supplierName, mobile, email, companyId, status });
             }
 
             if (!hasResults) {
@@ -274,6 +298,11 @@ public class StockManagementSupplier extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -292,6 +321,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         ResetRegistration = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         CompanyID = new javax.swing.JComboBox<>();
+        StatusBox = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         SearchBar = new javax.swing.JTextField();
@@ -300,8 +330,8 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         SupplierTable = new javax.swing.JTable();
 
-        jPanel1.setBackground(new java.awt.Color(217, 217, 217));
-        jPanel1.setForeground(new java.awt.Color(0, 0, 0));
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
 
         FNTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -354,6 +384,14 @@ public class StockManagementSupplier extends javax.swing.JPanel {
             }
         });
 
+        ResetSearch.setBackground(new java.awt.Color(255, 51, 51));
+        ResetSearch.setText("Reset");
+        ResetSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ResetSearchActionPerformed(evt);
+            }
+        });
+
         ResetRegistration.setBackground(new java.awt.Color(255, 51, 51));
         ResetRegistration.setText("Reset");
         ResetRegistration.addActionListener(new java.awt.event.ActionListener() {
@@ -369,6 +407,14 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         CompanyID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CompanyIDActionPerformed(evt);
+            }
+        });
+
+        StatusBox.setModel(
+                new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        StatusBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                StatusBoxActionPerformed(evt);
             }
         });
 
@@ -413,7 +459,12 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                         .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING,
                                 javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
                                 Short.MAX_VALUE)
-                        .addComponent(CompanyID, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                        .addComponent(CompanyID, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(65, 65, 65)
+                                .addComponent(StatusBox, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
@@ -444,18 +495,21 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(CompanyID, javax.swing.GroupLayout.PREFERRED_SIZE,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(192, 192, 192)
+                                .addGap(68, 68, 68)
+                                .addComponent(StatusBox, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(68, 68, 68)
                                 .addComponent(CreateAccount)
                                 .addGap(18, 18, 18)
                                 .addComponent(UpdateAccount)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(18, 18, 18)
                                 .addComponent(ResetRegistration)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+                                .addContainerGap(40, Short.MAX_VALUE)));
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(0, 0, 0));
 
-        jPanel3.setBackground(new java.awt.Color(217, 217, 217));
-        jPanel3.setForeground(new java.awt.Color(0, 0, 0));
+        jPanel3.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel3.setForeground(new java.awt.Color(255, 255, 255));
 
         SearchBar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -464,12 +518,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         });
 
         ResetSearch.setBackground(new java.awt.Color(255, 51, 51));
-        ResetSearch.setText("Reset");
-        ResetSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ResetSearchActionPerformed(evt);
-            }
-        });
+        ResetSearch.setText("Rest");
 
         jLabel10.setText("Search");
 
@@ -486,7 +535,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(42, 42, 42)
                                                 .addComponent(ResetSearch)))
-                                .addContainerGap(168, Short.MAX_VALUE)));
+                                .addContainerGap(174, Short.MAX_VALUE)));
         jPanel3Layout.setVerticalGroup(
                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
@@ -500,17 +549,17 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                                         .addComponent(ResetSearch))
                                 .addGap(45, 45, 45)));
 
-        SupplierTable.setBackground(new java.awt.Color(217, 217, 217));
-        SupplierTable.setForeground(new java.awt.Color(0, 0, 0));
+        SupplierTable.setBackground(new java.awt.Color(0, 0, 0));
+        SupplierTable.setForeground(new java.awt.Color(255, 255, 255));
         SupplierTable.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][] {
-                        { null, null, null, null, null },
-                        { null, null, null, null, null },
-                        { null, null, null, null, null },
-                        { null, null, null, null, null }
+                        { null, null, null, null, null, null },
+                        { null, null, null, null, null, null },
+                        { null, null, null, null, null, null },
+                        { null, null, null, null, null, null }
                 },
                 new String[] {
-                        "Supplier ID", "Supplier Name", "Mobile", "Email", "Company ID"
+                        "Supplier ID", "Supplier Name", "Mobile", "Email", "Company ID", "Status"
                 }) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -524,13 +573,13 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
+                                .addGap(0, 0, 0)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel2Layout.createSequentialGroup()
                                                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addContainerGap())
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 847,
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 918,
                                                 Short.MAX_VALUE))));
         jPanel2Layout.setVerticalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -538,7 +587,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                                 .addGap(28, 28, 28)
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(0, 0, 0)
                                 .addComponent(jScrollPane1)
                                 .addContainerGap()));
 
@@ -553,7 +602,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                                 .addGap(0, 0, 0)
                                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap()));
+                                .addGap(0, 0, 0)));
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -563,8 +612,13 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap()));
+                                .addGap(0, 0, 0)));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jComboBox1ActionPerformed
+        // tahike
+        // TODO add your handling code here:
+    }// GEN-LAST:event_jComboBox1ActionPerformed
 
     private void SearchBarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_SearchBarActionPerformed
         // TODO add your handling code here:
@@ -594,11 +648,85 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         // TODO add your handling code here:
     }// GEN-LAST:event_CompanyIDActionPerformed
 
+    private void StatusBoxActionPerformed(java.awt.event.ActionEvent evt) {
+
+    }
+
+    // private void UpdateAccountActionPerformed(java.awt.event.ActionEvent evt) {//
+    // GEN-FIRST:event_UpdateAccountActionPerformed
+    // // JOptionPane.showMessageDialog(this, "Error", "errorrrr",
+    // // JOptionPane.WARNING_MESSAGE);
+    // try {
+    // int selectedRow = SupplierTable.getSelectedRow();
+    // if (selectedRow == -1) {
+    // JOptionPane.showMessageDialog(this, "Please select a supplier to update.");
+    // return;
+    // }
+
+    // String supplierId = SupplierTable.getValueAt(selectedRow, 0).toString();
+    // String name = FNTextField.getText().trim() + " " +
+    // LNTextField.getText().trim();
+    // String mobile = MobileTextField.getText().trim();
+    // String email = EmailTextField.getText().trim();
+    // String selectedCompanyCombo = CompanyID.getSelectedItem().toString();
+    // String selectedCompanyCode = selectedCompanyCombo.split(" - ")[0];
+    // String Sta
+
+    // if (!validateInput(name, name, mobile, email)) {
+
+    // return;
+
+    // } else {
+    // // 🔍 Step: Find the `id` from `company` table where `company_id` =
+    // // selectedCompanyCode
+    // String companyQuery = "SELECT id FROM company WHERE company_id = '"
+    // + selectedCompanyCode.replace("'", "''") + "'";
+    // ResultSet rs = MySQL2.executeSearch(companyQuery);
+    // int companyId = -1;
+    // if (rs.next()) {
+    // companyId = rs.getInt("id");
+    // } else {
+    // JOptionPane.showMessageDialog(this, "Error: Company not found.");
+    // return;
+    // }
+
+    // // 👷 Build the UPDATE query
+    // name = name.replace("'", "''");
+    // mobile = mobile.replace("'", "''");
+    // email = email.replace("'", "''");
+
+    // String updateQuery = "UPDATE supplier SET " +
+    // "name = '" + name + "', " +
+    // "mobile = '" + mobile + "', " +
+    // "email = '" + email + "', " +
+    // "company_id = " + companyId + " " +
+    // "WHERE supplier_id = '" + supplierId + "'";
+
+    // int rowsUpdated = MySQL2.executeIUD(updateQuery);
+
+    // if (rowsUpdated > 0) {
+    // JOptionPane.showMessageDialog(this, "Supplier updated successfully.");
+    // loadSupplierTable(); // Refresh table
+    // } else {
+    // JOptionPane.showMessageDialog(this, "Failed to update supplier.");
+    // }
+
+    // clearFields();
+    // UpdateAccount.setEnabled(false);
+    // CreateAccount.setEnabled(true);
+    // CompanyID.setEnabled(true);
+
+    // }
+
+    // } catch (Exception e) {
+    // JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+    // e.printStackTrace();
+    // }
+    // }// GEN-LAST:event_UpdateAccountActionPerformed
+
     private void UpdateAccountActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_UpdateAccountActionPerformed
-        // JOptionPane.showMessageDialog(this, "Error", "errorrrr",
-        // JOptionPane.WARNING_MESSAGE);
         try {
-            int selectedRow = SupplierTable.getSelectedRow();
+            // int selectedRow = SupplierTable.getSelectedRow();
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Please select a supplier to update.");
                 return;
@@ -610,70 +738,74 @@ public class StockManagementSupplier extends javax.swing.JPanel {
             String email = EmailTextField.getText().trim();
             String selectedCompanyCombo = CompanyID.getSelectedItem().toString();
             String selectedCompanyCode = selectedCompanyCombo.split(" - ")[0];
-
-            System.out.println("########################\n\n\n\n\n");
-            System.out.println(selectedCompanyCode);
-            System.out.println("\n\n\n\n\n########################");
+            String status = (String) StatusBox.getSelectedItem();
 
             if (!validateInput(name, name, mobile, email)) {
-
                 return;
-
-            } else {
-                // 🔍 Step: Find the `id` from `company` table where `company_id` =
-                // selectedCompanyCode
-                String companyQuery = "SELECT id FROM company WHERE company_id = '"
-                        + selectedCompanyCode.replace("'", "''") + "'";
-                ResultSet rs = MySQL2.executeSearch(companyQuery);
-                int companyId = -1;
-                if (rs.next()) {
-                    companyId = rs.getInt("id");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Error: Company not found.");
-                    return;
-                }
-
-                // 👷 Build the UPDATE query
-                name = name.replace("'", "''");
-                mobile = mobile.replace("'", "''");
-                email = email.replace("'", "''");
-
-                String updateQuery = "UPDATE supplier SET " +
-                        "name = '" + name + "', " +
-                        "mobile = '" + mobile + "', " +
-                        "email = '" + email + "', " +
-                        "company_id = " + companyId + " " +
-                        "WHERE supplier_id = '" + supplierId + "'";
-
-                int rowsUpdated = MySQL2.executeIUD(updateQuery);
-
-                if (rowsUpdated > 0) {
-                    JOptionPane.showMessageDialog(this, "Supplier updated successfully.");
-                    loadSupplierTable(); // Refresh table
-                } else {
-                    JOptionPane.showMessageDialog(this, "Failed to update supplier.");
-                }
-
-                clearFields();
-                UpdateAccount.setEnabled(false);
-                CreateAccount.setEnabled(true);
-                CompanyID.setEnabled(true);
-
             }
+
+            String companyQuery = "SELECT id FROM company WHERE company_id = '" +
+                    selectedCompanyCode.replace("'", "''") + "'";
+            ResultSet companyRs = MySQL2.executeSearch(companyQuery);
+            int companyId = -1;
+            if (companyRs.next()) {
+                companyId = companyRs.getInt("id");
+            } else {
+                JOptionPane.showMessageDialog(this, "Error: Company not found.");
+                return;
+            }
+
+            String statusQuery = "SELECT id FROM status WHERE status = '" + status.replace("'", "''") + "'";
+            ResultSet statusRs = MySQL2.executeSearch(statusQuery);
+            int statusId = -1;
+            if (statusRs.next()) {
+                statusId = statusRs.getInt("id");
+            } else {
+                JOptionPane.showMessageDialog(this, "Error: Status not found.");
+                return;
+            }
+
+            name = name.replace("'", "''");
+            mobile = mobile.replace("'", "''");
+            email = email.replace("'", "''");
+
+            String updateQuery = "UPDATE supplier SET " +
+                    "name = '" + name + "', " +
+                    "mobile = '" + mobile + "', " +
+                    "email = '" + email + "', " +
+                    "company_id = " + companyId + ", " +
+                    "status_id = " + statusId + " " +
+                    "WHERE supplier_id = '" + supplierId + "'";
+
+            int rowsUpdated = MySQL2.executeIUD(updateQuery);
+
+            if (rowsUpdated > 0) {
+                JOptionPane.showMessageDialog(this, "Supplier updated successfully.");
+                loadSupplierTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to update supplier.");
+            }
+
+            selectedRow = -1;
+            clearFields();
+            UpdateAccount.setEnabled(false);
+            CreateAccount.setEnabled(true);
+            CompanyID.setEnabled(true);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
             e.printStackTrace();
         }
-    }// GEN-LAST:event_UpdateAccountActionPerformed
+    }
 
-    private void CreateAccountActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_CreateAccountActionPerformed
+    private void CreateAccountActionPerformed(java.awt.event.ActionEvent evt) {
         String firstName = FNTextField.getText().trim();
         String lastName = LNTextField.getText().trim();
         String name = firstName + " " + lastName;
         String mobile = MobileTextField.getText().trim();
         String email = EmailTextField.getText().trim();
         String comboValue = (String) CompanyID.getSelectedItem();
+        String status = (String) StatusBox.getSelectedItem();
 
         String SupplierID = generateNewSupplierID();
 
@@ -685,18 +817,35 @@ public class StockManagementSupplier extends javax.swing.JPanel {
 
         } else {
             try {
+
                 String checkQuery = String.format("SELECT * FROM supplier WHERE supplier_id = '%s' OR email = '%s'",
                         SupplierID, email);
-
                 ResultSet rs = MySQL2.executeSearch(checkQuery);
 
                 if (rs.next()) {
                     JOptionPane.showMessageDialog(this, "A supplier with this ID or email already exists!");
                 } else {
+
+                    String statusQuery = "SELECT id FROM status WHERE status = '" + status.replace("'", "''") + "'";
+                    ResultSet statusRs = MySQL2.executeSearch(statusQuery);
+                    int statusId = -1;
+
+                    if (statusRs.next()) {
+                        statusId = statusRs.getInt("id");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error: Status not found.");
+                        return;
+                    }
+
                     String query = String.format(
-                            "INSERT INTO supplier (supplier_id, name, mobile, email, company_id)" +
-                                    "VALUES ( '%s', '%s', '%s', '%s', %d)",
-                            SupplierID, name, mobile, email, CompanyIDInt);
+                            "INSERT INTO supplier (supplier_id, name, mobile, email, company_id, status_id) " +
+                                    "VALUES ('%s', '%s', '%s', '%s', %d, %d)",
+                            SupplierID.replace("'", "''"),
+                            name.replace("'", "''"),
+                            mobile.replace("'", "''"),
+                            email.replace("'", "''"),
+                            CompanyIDInt,
+                            statusId);
 
                     MySQL2.executeIUD(query);
                     JOptionPane.showMessageDialog(this, "Supplier created successfully!");
@@ -705,13 +854,12 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                     clearFields();
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Error creating supplier: " + e.getMessage());
+                JOptionPane.showMessageDialog(this, "Error creating supplier: " + e.getMessage(), "Error:",
+                        JOptionPane.WARNING_MESSAGE);
                 e.printStackTrace();
             }
-
         }
-
-    }// GEN-LAST:event_CreateAccountActionPerformed
+    }
 
     private void ResetRegistrationActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ResetRegistrationActionPerformed
         clearFields();
@@ -727,6 +875,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
     private javax.swing.JButton ResetRegistration;
     private javax.swing.JButton ResetSearch;
     private javax.swing.JTextField SearchBar;
+    private javax.swing.JComboBox<String> StatusBox;
     private javax.swing.JTable SupplierTable;
     private javax.swing.JButton UpdateAccount;
     private javax.swing.JLabel jLabel1;
