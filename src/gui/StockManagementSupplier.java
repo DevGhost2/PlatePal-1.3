@@ -32,6 +32,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         initComponents();
         loadCompanyIDs();
         loadSupplierTable();
+        loadActiveBox();
 
         SearchBar.getDocument().addDocumentListener(new DocumentListener() {
             private final int DEBOUNCE_DELAY = 300; // milliseconds
@@ -79,10 +80,6 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                     String email = SupplierTable.getValueAt(selectedRow, 3).toString();
                     String companyId = SupplierTable.getValueAt(selectedRow, 4).toString();
 
-                    System.out.println("########################\n\n\n\n\n");
-                    System.out.println(companyId);
-                    System.out.println("\n\n\n\n\n########################");
-
                     String[] nameParts = supplierName.split(" ", 2);
                     FNTextField.setText(nameParts[0]);
                     LNTextField.setText(nameParts.length > 1 ? nameParts[1] : "");
@@ -114,7 +111,6 @@ public class StockManagementSupplier extends javax.swing.JPanel {
             while (rs.next()) {
                 CompanyID.addItem(rs.getString("company_id") + " - " + rs.getString("name"));
             }
-            // close connection
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,15 +118,32 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         }
     }
 
+    private void loadActiveBox() {
+        try {
+            ResultSet rs = MySQL2.executeSearch("SELECT status FROM status");
+            StatusBox.removeAllItems();
+            while (rs.next()) {
+                StatusBox.addItem(rs.getString("status"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error loading Active Status Selection Box: " + e.getMessage());
+        }
+    }
+
     private void loadSupplierTable() {
         DefaultTableModel model = (DefaultTableModel) SupplierTable.getModel();
         model.setRowCount(0);
 
-        // String query = "SELECT supplier_id, name, name AS first_name, mobile, email,
-        // 'No Address' AS address FROM supplier";
-        String query = "SELECT s.supplier_id, s.name, s.mobile, s.email, c.company_id " +
+        // String query = "SELECT s.supplier_id, s.name, s.mobile, s.email,
+        // c.company_id, " +
+        // "FROM supplier s " +
+        // "JOIN company c ON s.company_id = c.id";
+
+        String query = "SELECT s.supplier_id, s.name, s.mobile, s.email, c.company_id, st.status " +
                 "FROM supplier s " +
-                "JOIN company c ON s.company_id = c.id";
+                "JOIN company c ON s.company_id = c.id " +
+                "JOIN status st ON s.status_id = st.id";
 
         try {
             ResultSet rs = MySQL2.executeSearch(query);
@@ -141,12 +154,14 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                 String mobile = rs.getString("mobile");
                 String email = rs.getString("email");
                 String companyID = rs.getString("company_id");
+                String statusID = rs.getString("status");
 
                 model.addRow(new Object[] { supplierId,
                         supplierName,
                         mobile,
                         email,
-                        companyID
+                        companyID,
+                        statusID
                 });
             }
         } catch (Exception e) {
@@ -274,6 +289,11 @@ public class StockManagementSupplier extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -292,6 +312,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         ResetRegistration = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         CompanyID = new javax.swing.JComboBox<>();
+        StatusBox = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         SearchBar = new javax.swing.JTextField();
@@ -300,8 +321,8 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         SupplierTable = new javax.swing.JTable();
 
-        jPanel1.setBackground(new java.awt.Color(217, 217, 217));
-        jPanel1.setForeground(new java.awt.Color(0, 0, 0));
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
 
         FNTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -354,6 +375,14 @@ public class StockManagementSupplier extends javax.swing.JPanel {
             }
         });
 
+        ResetSearch.setBackground(new java.awt.Color(255, 51, 51));
+        ResetSearch.setText("Reset");
+        ResetSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ResetSearchActionPerformed(evt);
+            }
+        });
+
         ResetRegistration.setBackground(new java.awt.Color(255, 51, 51));
         ResetRegistration.setText("Reset");
         ResetRegistration.addActionListener(new java.awt.event.ActionListener() {
@@ -369,6 +398,14 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         CompanyID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CompanyIDActionPerformed(evt);
+            }
+        });
+
+        StatusBox.setModel(
+                new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        StatusBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                StatusBoxActionPerformed(evt);
             }
         });
 
@@ -413,7 +450,12 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                         .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING,
                                 javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
                                 Short.MAX_VALUE)
-                        .addComponent(CompanyID, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                        .addComponent(CompanyID, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(65, 65, 65)
+                                .addComponent(StatusBox, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
@@ -444,18 +486,21 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(CompanyID, javax.swing.GroupLayout.PREFERRED_SIZE,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(192, 192, 192)
+                                .addGap(68, 68, 68)
+                                .addComponent(StatusBox, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(68, 68, 68)
                                 .addComponent(CreateAccount)
                                 .addGap(18, 18, 18)
                                 .addComponent(UpdateAccount)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(18, 18, 18)
                                 .addComponent(ResetRegistration)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+                                .addContainerGap(40, Short.MAX_VALUE)));
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(0, 0, 0));
 
-        jPanel3.setBackground(new java.awt.Color(217, 217, 217));
-        jPanel3.setForeground(new java.awt.Color(0, 0, 0));
+        jPanel3.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel3.setForeground(new java.awt.Color(255, 255, 255));
 
         SearchBar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -464,12 +509,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         });
 
         ResetSearch.setBackground(new java.awt.Color(255, 51, 51));
-        ResetSearch.setText("Reset");
-        ResetSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ResetSearchActionPerformed(evt);
-            }
-        });
+        ResetSearch.setText("Rest");
 
         jLabel10.setText("Search");
 
@@ -486,7 +526,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(42, 42, 42)
                                                 .addComponent(ResetSearch)))
-                                .addContainerGap(168, Short.MAX_VALUE)));
+                                .addContainerGap(174, Short.MAX_VALUE)));
         jPanel3Layout.setVerticalGroup(
                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
@@ -500,17 +540,17 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                                         .addComponent(ResetSearch))
                                 .addGap(45, 45, 45)));
 
-        SupplierTable.setBackground(new java.awt.Color(217, 217, 217));
-        SupplierTable.setForeground(new java.awt.Color(0, 0, 0));
+        SupplierTable.setBackground(new java.awt.Color(0, 0, 0));
+        SupplierTable.setForeground(new java.awt.Color(255, 255, 255));
         SupplierTable.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][] {
-                        { null, null, null, null, null },
-                        { null, null, null, null, null },
-                        { null, null, null, null, null },
-                        { null, null, null, null, null }
+                        { null, null, null, null, null, null },
+                        { null, null, null, null, null, null },
+                        { null, null, null, null, null, null },
+                        { null, null, null, null, null, null }
                 },
                 new String[] {
-                        "Supplier ID", "Supplier Name", "Mobile", "Email", "Company ID"
+                        "Supplier ID", "Supplier Name", "Mobile", "Email", "Company ID", "Status"
                 }) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -524,13 +564,13 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
+                                .addGap(0, 0, 0)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel2Layout.createSequentialGroup()
                                                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addContainerGap())
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 847,
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 918,
                                                 Short.MAX_VALUE))));
         jPanel2Layout.setVerticalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -538,7 +578,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                                 .addGap(28, 28, 28)
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(0, 0, 0)
                                 .addComponent(jScrollPane1)
                                 .addContainerGap()));
 
@@ -553,7 +593,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                                 .addGap(0, 0, 0)
                                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap()));
+                                .addGap(0, 0, 0)));
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -563,8 +603,13 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap()));
+                                .addGap(0, 0, 0)));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jComboBox1ActionPerformed
+        // tahike
+        // TODO add your handling code here:
+    }// GEN-LAST:event_jComboBox1ActionPerformed
 
     private void SearchBarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_SearchBarActionPerformed
         // TODO add your handling code here:
@@ -593,6 +638,10 @@ public class StockManagementSupplier extends javax.swing.JPanel {
     private void CompanyIDActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_CompanyIDActionPerformed
         // TODO add your handling code here:
     }// GEN-LAST:event_CompanyIDActionPerformed
+
+    private void StatusBoxActionPerformed(java.awt.event.ActionEvent evt) {
+
+    }
 
     private void UpdateAccountActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_UpdateAccountActionPerformed
         // JOptionPane.showMessageDialog(this, "Error", "errorrrr",
@@ -727,6 +776,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
     private javax.swing.JButton ResetRegistration;
     private javax.swing.JButton ResetSearch;
     private javax.swing.JTextField SearchBar;
+    private javax.swing.JComboBox<String> StatusBox;
     private javax.swing.JTable SupplierTable;
     private javax.swing.JButton UpdateAccount;
     private javax.swing.JLabel jLabel1;
