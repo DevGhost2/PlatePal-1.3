@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS `category` (
 
 -- Dumping data for table 123.category: ~3 rows (approximately)
 INSERT INTO `category` (`id`, `name`) VALUES
+
 	(0, 'All'),
 	(1, 'Foods'),
 	(2, 'Drinks');
@@ -163,8 +164,10 @@ CREATE TABLE IF NOT EXISTS `employee_address` (
 -- Dumping structure for table 123.employee_attendance
 CREATE TABLE IF NOT EXISTS `employee_attendance` (
   `id` int NOT NULL AUTO_INCREMENT,
+
   `checkin_time` time NOT NULL,
   `checkout_time` time DEFAULT NULL,
+
   `date` date NOT NULL,
   `employee_id` int NOT NULL,
   `attendance_type_id` int NOT NULL,
@@ -214,6 +217,7 @@ CREATE TABLE IF NOT EXISTS `gender` (
   `id` int NOT NULL AUTO_INCREMENT,
   `type` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
+  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table 123.gender: ~0 rows (approximately)
@@ -362,6 +366,7 @@ CREATE TABLE IF NOT EXISTS `product` (
   `id` int NOT NULL AUTO_INCREMENT,
   `title` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
   `product_id` varchar(10) NOT NULL,
+  
   `description` longtext CHARACTER SET utf8mb3 COLLATE utf8_general_ci,
   `added_date` datetime NOT NULL,
   `product_status_id` int NOT NULL,
@@ -419,6 +424,7 @@ CREATE TABLE IF NOT EXISTS `product_images` (
   PRIMARY KEY (`id`),
   KEY `fk_product_images_product1_idx` (`product_id`),
   CONSTRAINT `fk_product_images_product1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
+
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table 123.product_images: ~17 rows (approximately)
@@ -442,6 +448,7 @@ INSERT INTO `product_images` (`id`, `url`, `product_id`) VALUES
 	(17, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 17),
 	(18, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 18);
 
+
 -- Dumping structure for table 123.product_status
 CREATE TABLE IF NOT EXISTS `product_status` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -452,7 +459,9 @@ CREATE TABLE IF NOT EXISTS `product_status` (
 -- Dumping data for table 123.product_status: ~2 rows (approximately)
 INSERT INTO `product_status` (`id`, `name`) VALUES
 	(1, 'Active'),
+
 	(2, 'Inactive');
+
 
 -- Dumping structure for table 123.purchase_order
 CREATE TABLE IF NOT EXISTS `purchase_order` (
@@ -512,6 +521,7 @@ CREATE TABLE IF NOT EXISTS `request` (
 
 -- Dumping data for table 123.request: ~0 rows (approximately)
 
+
 -- Dumping structure for table 123.request_type
 CREATE TABLE IF NOT EXISTS `request_type` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -550,6 +560,7 @@ CREATE TABLE IF NOT EXISTS `size` (
   `id` int NOT NULL AUTO_INCREMENT,
   `size_type` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table 123.size: ~0 rows (approximately)
@@ -565,6 +576,7 @@ CREATE TABLE IF NOT EXISTS `status` (
 INSERT INTO `status` (`id`, `status`) VALUES
 	(1, 'Active'),
 	(2, 'Deactive');
+
 
 -- Dumping structure for table 123.stock
 CREATE TABLE IF NOT EXISTS `stock` (
@@ -616,6 +628,7 @@ CREATE TABLE IF NOT EXISTS `stock_product` (
 
 -- Dumping data for table 123.stock_product: ~0 rows (approximately)
 
+
 -- Dumping structure for table 123.sub_category
 CREATE TABLE IF NOT EXISTS `sub_category` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -643,6 +656,7 @@ INSERT INTO `sub_category` (`id`, `title`, `category_id`, `image`, `sellCount`) 
 	(10, 'Shorteats', 2, '', 0),
 	(11, 'Drinks', 1, '', 0);
 
+
 -- Dumping structure for table 123.supplier
 CREATE TABLE IF NOT EXISTS `supplier` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -651,13 +665,16 @@ CREATE TABLE IF NOT EXISTS `supplier` (
   `mobile` varchar(10) NOT NULL,
   `email` varchar(100) NOT NULL,
   `company_id` int NOT NULL,
+
   `status_id` int NOT NULL,
+
   PRIMARY KEY (`id`),
   UNIQUE KEY `supplier_id` (`supplier_id`),
   KEY `fk_supplier_company1_idx` (`company_id`),
   KEY `fk_supplier_status1_idx` (`status_id`),
   CONSTRAINT `fk_supplier_company1` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`),
   CONSTRAINT `fk_supplier_status1` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`)
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table 123.supplier: ~0 rows (approximately)
