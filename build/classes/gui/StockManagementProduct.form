@@ -150,9 +150,6 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JTextField" name="productName">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Enter Product Name"/>
-          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="productNameActionPerformed"/>
           </Events>
@@ -249,9 +246,6 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JTextField" name="productSearch">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Search Product"/>
-          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="productSearchActionPerformed"/>
           </Events>
