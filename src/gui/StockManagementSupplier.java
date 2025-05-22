@@ -79,6 +79,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                     String mobile = SupplierTable.getValueAt(selectedRow, 2).toString();
                     String email = SupplierTable.getValueAt(selectedRow, 3).toString();
                     String companyId = SupplierTable.getValueAt(selectedRow, 4).toString();
+                    String status = SupplierTable.getValueAt(selectedRow, 5).toString();
 
                     String[] nameParts = supplierName.split(" ", 2);
                     FNTextField.setText(nameParts[0]);
@@ -86,6 +87,8 @@ public class StockManagementSupplier extends javax.swing.JPanel {
 
                     MobileTextField.setText(mobile);
                     EmailTextField.setText(email);
+
+                    StatusBox.setSelectedItem(status);
 
                     for (int i = 0; i < CompanyID.getItemCount(); i++) {
                         String item = CompanyID.getItemAt(i);
@@ -643,9 +646,79 @@ public class StockManagementSupplier extends javax.swing.JPanel {
 
     }
 
+    // private void UpdateAccountActionPerformed(java.awt.event.ActionEvent evt) {//
+    // GEN-FIRST:event_UpdateAccountActionPerformed
+    // // JOptionPane.showMessageDialog(this, "Error", "errorrrr",
+    // // JOptionPane.WARNING_MESSAGE);
+    // try {
+    // int selectedRow = SupplierTable.getSelectedRow();
+    // if (selectedRow == -1) {
+    // JOptionPane.showMessageDialog(this, "Please select a supplier to update.");
+    // return;
+    // }
+
+    // String supplierId = SupplierTable.getValueAt(selectedRow, 0).toString();
+    // String name = FNTextField.getText().trim() + " " +
+    // LNTextField.getText().trim();
+    // String mobile = MobileTextField.getText().trim();
+    // String email = EmailTextField.getText().trim();
+    // String selectedCompanyCombo = CompanyID.getSelectedItem().toString();
+    // String selectedCompanyCode = selectedCompanyCombo.split(" - ")[0];
+    // String Sta
+
+    // if (!validateInput(name, name, mobile, email)) {
+
+    // return;
+
+    // } else {
+    // // 🔍 Step: Find the `id` from `company` table where `company_id` =
+    // // selectedCompanyCode
+    // String companyQuery = "SELECT id FROM company WHERE company_id = '"
+    // + selectedCompanyCode.replace("'", "''") + "'";
+    // ResultSet rs = MySQL2.executeSearch(companyQuery);
+    // int companyId = -1;
+    // if (rs.next()) {
+    // companyId = rs.getInt("id");
+    // } else {
+    // JOptionPane.showMessageDialog(this, "Error: Company not found.");
+    // return;
+    // }
+
+    // // 👷 Build the UPDATE query
+    // name = name.replace("'", "''");
+    // mobile = mobile.replace("'", "''");
+    // email = email.replace("'", "''");
+
+    // String updateQuery = "UPDATE supplier SET " +
+    // "name = '" + name + "', " +
+    // "mobile = '" + mobile + "', " +
+    // "email = '" + email + "', " +
+    // "company_id = " + companyId + " " +
+    // "WHERE supplier_id = '" + supplierId + "'";
+
+    // int rowsUpdated = MySQL2.executeIUD(updateQuery);
+
+    // if (rowsUpdated > 0) {
+    // JOptionPane.showMessageDialog(this, "Supplier updated successfully.");
+    // loadSupplierTable(); // Refresh table
+    // } else {
+    // JOptionPane.showMessageDialog(this, "Failed to update supplier.");
+    // }
+
+    // clearFields();
+    // UpdateAccount.setEnabled(false);
+    // CreateAccount.setEnabled(true);
+    // CompanyID.setEnabled(true);
+
+    // }
+
+    // } catch (Exception e) {
+    // JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+    // e.printStackTrace();
+    // }
+    // }// GEN-LAST:event_UpdateAccountActionPerformed
+
     private void UpdateAccountActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_UpdateAccountActionPerformed
-        // JOptionPane.showMessageDialog(this, "Error", "errorrrr",
-        // JOptionPane.WARNING_MESSAGE);
         try {
             int selectedRow = SupplierTable.getSelectedRow();
             if (selectedRow == -1) {
@@ -659,56 +732,61 @@ public class StockManagementSupplier extends javax.swing.JPanel {
             String email = EmailTextField.getText().trim();
             String selectedCompanyCombo = CompanyID.getSelectedItem().toString();
             String selectedCompanyCode = selectedCompanyCombo.split(" - ")[0];
-
-            System.out.println("########################\n\n\n\n\n");
-            System.out.println(selectedCompanyCode);
-            System.out.println("\n\n\n\n\n########################");
+            String status = (String) StatusBox.getSelectedItem();
 
             if (!validateInput(name, name, mobile, email)) {
-
                 return;
-
-            } else {
-                // 🔍 Step: Find the `id` from `company` table where `company_id` =
-                // selectedCompanyCode
-                String companyQuery = "SELECT id FROM company WHERE company_id = '"
-                        + selectedCompanyCode.replace("'", "''") + "'";
-                ResultSet rs = MySQL2.executeSearch(companyQuery);
-                int companyId = -1;
-                if (rs.next()) {
-                    companyId = rs.getInt("id");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Error: Company not found.");
-                    return;
-                }
-
-                // 👷 Build the UPDATE query
-                name = name.replace("'", "''");
-                mobile = mobile.replace("'", "''");
-                email = email.replace("'", "''");
-
-                String updateQuery = "UPDATE supplier SET " +
-                        "name = '" + name + "', " +
-                        "mobile = '" + mobile + "', " +
-                        "email = '" + email + "', " +
-                        "company_id = " + companyId + " " +
-                        "WHERE supplier_id = '" + supplierId + "'";
-
-                int rowsUpdated = MySQL2.executeIUD(updateQuery);
-
-                if (rowsUpdated > 0) {
-                    JOptionPane.showMessageDialog(this, "Supplier updated successfully.");
-                    loadSupplierTable(); // Refresh table
-                } else {
-                    JOptionPane.showMessageDialog(this, "Failed to update supplier.");
-                }
-
-                clearFields();
-                UpdateAccount.setEnabled(false);
-                CreateAccount.setEnabled(true);
-                CompanyID.setEnabled(true);
-
             }
+
+            // 🔍 Step 1: Get company_id from company table using company_id string
+            String companyQuery = "SELECT id FROM company WHERE company_id = '" +
+                    selectedCompanyCode.replace("'", "''") + "'";
+            ResultSet companyRs = MySQL2.executeSearch(companyQuery);
+            int companyId = -1;
+            if (companyRs.next()) {
+                companyId = companyRs.getInt("id");
+            } else {
+                JOptionPane.showMessageDialog(this, "Error: Company not found.");
+                return;
+            }
+
+            // 🔍 Step 2: Get status_id from status table using status name
+            String statusQuery = "SELECT id FROM status WHERE status = '" + status.replace("'", "''") + "'";
+            ResultSet statusRs = MySQL2.executeSearch(statusQuery);
+            int statusId = -1;
+            if (statusRs.next()) {
+                statusId = statusRs.getInt("id");
+            } else {
+                JOptionPane.showMessageDialog(this, "Error: Status not found.");
+                return;
+            }
+
+            // 👷 Build the UPDATE query
+            name = name.replace("'", "''");
+            mobile = mobile.replace("'", "''");
+            email = email.replace("'", "''");
+
+            String updateQuery = "UPDATE supplier SET " +
+                    "name = '" + name + "', " +
+                    "mobile = '" + mobile + "', " +
+                    "email = '" + email + "', " +
+                    "company_id = " + companyId + ", " +
+                    "status_id = " + statusId + " " +
+                    "WHERE supplier_id = '" + supplierId + "'";
+
+            int rowsUpdated = MySQL2.executeIUD(updateQuery);
+
+            if (rowsUpdated > 0) {
+                JOptionPane.showMessageDialog(this, "Supplier updated successfully.");
+                loadSupplierTable(); // Refresh table
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to update supplier.");
+            }
+
+            clearFields();
+            UpdateAccount.setEnabled(false);
+            CreateAccount.setEnabled(true);
+            CompanyID.setEnabled(true);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
@@ -723,6 +801,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
         String mobile = MobileTextField.getText().trim();
         String email = EmailTextField.getText().trim();
         String comboValue = (String) CompanyID.getSelectedItem();
+        String status = (String) StatusBox.getSelectedItem();
 
         String SupplierID = generateNewSupplierID();
 
@@ -734,18 +813,36 @@ public class StockManagementSupplier extends javax.swing.JPanel {
 
         } else {
             try {
+                // Check for duplicates
                 String checkQuery = String.format("SELECT * FROM supplier WHERE supplier_id = '%s' OR email = '%s'",
                         SupplierID, email);
-
                 ResultSet rs = MySQL2.executeSearch(checkQuery);
 
                 if (rs.next()) {
                     JOptionPane.showMessageDialog(this, "A supplier with this ID or email already exists!");
                 } else {
+                    // 🔍 Find status_id from status table
+                    String statusQuery = "SELECT id FROM status WHERE status = '" + status.replace("'", "''") + "'";
+                    ResultSet statusRs = MySQL2.executeSearch(statusQuery);
+                    int statusId = -1;
+
+                    if (statusRs.next()) {
+                        statusId = statusRs.getInt("id");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error: Status not found.");
+                        return;
+                    }
+
+                    // 👷 Insert supplier with status_id
                     String query = String.format(
-                            "INSERT INTO supplier (supplier_id, name, mobile, email, company_id)" +
-                                    "VALUES ( '%s', '%s', '%s', '%s', %d)",
-                            SupplierID, name, mobile, email, CompanyIDInt);
+                            "INSERT INTO supplier (supplier_id, name, mobile, email, company_id, status_id) " +
+                                    "VALUES ('%s', '%s', '%s', '%s', %d, %d)",
+                            SupplierID.replace("'", "''"),
+                            name.replace("'", "''"),
+                            mobile.replace("'", "''"),
+                            email.replace("'", "''"),
+                            CompanyIDInt,
+                            statusId);
 
                     MySQL2.executeIUD(query);
                     JOptionPane.showMessageDialog(this, "Supplier created successfully!");
@@ -757,9 +854,7 @@ public class StockManagementSupplier extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Error creating supplier: " + e.getMessage());
                 e.printStackTrace();
             }
-
         }
-
     }// GEN-LAST:event_CreateAccountActionPerformed
 
     private void ResetRegistrationActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ResetRegistrationActionPerformed
