@@ -382,7 +382,7 @@ INSERT INTO `product` (`id`, `title`, `product_id`, `description`, `added_date`,
 	(3, 'Chicken Rice', 'pdct003', NULL, '2025-05-21 22:11:13', 1, 1, 345),
 	(4, 'Pork Rice', 'pdct004', NULL, '2025-05-21 22:11:39', 1, 1, 100),
 	(5, 'Fish Rice', 'pdct005', NULL, '2025-05-21 22:12:32', 1, 1, 48),
-	(6, 'Cea Food Rice', 'pdct006', NULL, '2025-05-21 22:12:52', 1, 1, 60),
+	(6, 'Sea Food Rice', 'pdct006', NULL, '2025-05-21 22:12:52', 1, 1, 60),
 	(7, 'Mixed Rice', 'pdct007', NULL, '2025-05-21 22:13:25', 1, 1, 97),
 	(8, 'Cheese Rice', 'pdct008', NULL, '2025-05-21 22:14:28', 1, 1, 22),
 	(9, 'Vegetable Kottu', 'pdct009', NULL, '2025-05-21 22:15:51', 1, 2, 44),
@@ -390,7 +390,7 @@ INSERT INTO `product` (`id`, `title`, `product_id`, `description`, `added_date`,
 	(11, 'Chicken Kottu', 'pdct011', NULL, '2025-05-21 22:17:05', 1, 2, 600),
 	(12, 'Pork Kottu', 'pdct012', NULL, '2025-05-21 22:17:59', 1, 2, 307),
 	(13, 'Fish Kottu', 'pdct013', NULL, '2025-05-21 22:18:52', 1, 2, 27),
-	(14, 'Cea Food Kottu', 'pdct014', NULL, '2025-05-21 22:19:19', 1, 2, 75),
+	(14, 'Sea Food Kottu', 'pdct014', NULL, '2025-05-21 22:19:19', 1, 2, 75),
 	(15, 'Mixed Kottu', 'pdct015', NULL, '2025-05-21 22:20:00', 1, 2, 267),
 	(16, 'Cheese Kottu', 'pdct016', NULL, '2025-05-21 22:21:32', 1, 2, 127),
 	(17, 'Noodles Kottu', 'pdct017', NULL, '2025-05-21 22:21:56', 1, 2, 65),
@@ -407,9 +407,19 @@ CREATE TABLE IF NOT EXISTS `product_has_size` (
   KEY `fk_product_has_size_product1_idx` (`product_id`),
   CONSTRAINT `fk_product_has_size_product1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
   CONSTRAINT `fk_product_has_size_size1` FOREIGN KEY (`size_id`) REFERENCES `size` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table 123.product_has_size: ~0 rows (approximately)
+INSERT INTO `product_has_size` (`id`, `product_id`, `size_id`, `price`) VALUES
+	(1, 1, 1, '600'),
+	(2, 1, 2, '1000'),
+	(3, 1, 3, '1400'),
+	(4, 2, 1, '800'),
+	(5, 2, 2, '1200'),
+	(6, 2, 3, '1600'),
+	(7, 3, 1, '1000'),
+	(8, 3, 2, '1500'),
+	(9, 3, 3, '2000');
 
 -- Dumping structure for table 123.product_images
 CREATE TABLE IF NOT EXISTS `product_images` (
@@ -425,7 +435,7 @@ CREATE TABLE IF NOT EXISTS `product_images` (
 INSERT INTO `product_images` (`id`, `url`, `product_id`) VALUES
 	(1, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 1),
 	(2, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 2),
-	(3, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\icons8-cheeseburger-40.png', 3),
+	(3, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 3),
 	(4, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 4),
 	(5, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 5),
 	(6, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 6),
@@ -550,9 +560,13 @@ CREATE TABLE IF NOT EXISTS `size` (
   `id` int NOT NULL AUTO_INCREMENT,
   `size_type` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table 123.size: ~0 rows (approximately)
+INSERT INTO `size` (`id`, `size_type`) VALUES
+	(1, 'M'),
+	(2, 'Lg'),
+	(3, 'Xl');
 
 -- Dumping structure for table 123.status
 CREATE TABLE IF NOT EXISTS `status` (
@@ -561,7 +575,7 @@ CREATE TABLE IF NOT EXISTS `status` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table 123.status: ~0 rows (approximately)
+-- Dumping data for table 123.status: ~2 rows (approximately)
 INSERT INTO `status` (`id`, `status`) VALUES
 	(1, 'Active'),
 	(2, 'Deactive');
@@ -589,13 +603,10 @@ CREATE TABLE IF NOT EXISTS `stock_item` (
   `price` double NOT NULL,
   `stock_product_id` int NOT NULL,
   `stock_id` int NOT NULL,
-  `qty_type_id` int NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `stock_item_id` (`stock_item_id`),
   KEY `fk_stock_item_stock_product1_idx` (`stock_product_id`),
   KEY `fk_stock_item_stock1_idx` (`stock_id`),
-  KEY `fk_stock_item_qty_type1_idx` (`qty_type_id`),
-  CONSTRAINT `fk_stock_item_qty_type1` FOREIGN KEY (`qty_type_id`) REFERENCES `qty_type` (`id`),
   CONSTRAINT `fk_stock_item_stock1` FOREIGN KEY (`stock_id`) REFERENCES `stock` (`id`),
   CONSTRAINT `fk_stock_item_stock_product1` FOREIGN KEY (`stock_product_id`) REFERENCES `stock_product` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -608,9 +619,12 @@ CREATE TABLE IF NOT EXISTS `stock_product` (
   `stock_product_id` varchar(10) NOT NULL,
   `title` varchar(45) NOT NULL,
   `status_id` int NOT NULL,
+  `qty_type_id` int NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `stock_product_id` (`stock_product_id`),
   KEY `fk_stock_product_status1_idx` (`status_id`),
+  KEY `fk_stock_product_qty_type1_idx` (`qty_type_id`),
+  CONSTRAINT `fk_stock_product_qty_type1` FOREIGN KEY (`qty_type_id`) REFERENCES `qty_type` (`id`),
   CONSTRAINT `fk_stock_product_status1` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
@@ -619,7 +633,7 @@ CREATE TABLE IF NOT EXISTS `stock_product` (
 -- Dumping structure for table 123.sub_category
 CREATE TABLE IF NOT EXISTS `sub_category` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) DEFAULT NULL,
+  `subCatTitle` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `category_id` int NOT NULL,
   `image` varchar(120) NOT NULL DEFAULT '',
   `sellCount` int NOT NULL DEFAULT (0),
@@ -628,8 +642,8 @@ CREATE TABLE IF NOT EXISTS `sub_category` (
   CONSTRAINT `fk_sub_category_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table 123.sub_category: ~0 rows (approximately)
-INSERT INTO `sub_category` (`id`, `title`, `category_id`, `image`, `sellCount`) VALUES
+-- Dumping data for table 123.sub_category: ~12 rows (approximately)
+INSERT INTO `sub_category` (`id`, `subCatTitle`, `category_id`, `image`, `sellCount`) VALUES
 	(0, 'All', 0, '', 10000),
 	(1, 'Rice', 1, '', 100),
 	(2, 'Kottu', 1, '', 200),
