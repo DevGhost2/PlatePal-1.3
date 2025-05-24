@@ -38,6 +38,7 @@ public class StockManagement extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -253,6 +254,11 @@ public class StockManagement extends javax.swing.JFrame {
         jButton10.setForeground(new java.awt.Color(255, 255, 255));
         jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-bill-24.png"))); // NOI18N
         jButton10.setText("                               GRN");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
 
         jButton11.setBackground(new java.awt.Color(51, 51, 51));
         jButton11.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
@@ -447,6 +453,13 @@ public class StockManagement extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton10ActionPerformed
+        StockManagementGRN SMGRN = new StockManagementGRN();
+        jPanel6.removeAll();
+        jPanel6.add(SMGRN, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
+    }// GEN-LAST:event_jButton10ActionPerformed
+
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton9ActionPerformed
 
     }// GEN-LAST:event_jButton9ActionPerformed
@@ -591,7 +604,7 @@ public class StockManagement extends javax.swing.JFrame {
         jButton6.setText("                          PROFILE");
         jButton7.setText("                 DASHBOARD");
         jButton8.setText("                           STOCK");
-        Product.setText("                    INVENTORY");
+        Product.setText("                    Product");
         jButton10.setText("                               GRN");
         jButton11.setText("                        SUPPLIER");
         jButton12.setText("                               AOD");

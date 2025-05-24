@@ -34,6 +34,7 @@ public class StockManagementProduct extends javax.swing.JPanel {
     public StockManagementProduct() {
         initComponents();
         loadProductTable();
+        loadQuantityTypeBox();
         loadStatusBox();
 
         productCreate.setEnabled(true);
@@ -77,9 +78,11 @@ public class StockManagementProduct extends javax.swing.JPanel {
 
                     String prodId = ProductTable.getValueAt(selectedRow, 0).toString();
                     String prodName = ProductTable.getValueAt(selectedRow, 1).toString();
-                    String status = ProductTable.getValueAt(selectedRow, 2).toString();
+                    String qtytype = ProductTable.getValueAt(selectedRow, 2).toString();
+                    String status = ProductTable.getValueAt(selectedRow, 3).toString();
 
                     productStatus.setSelectedItem(status);
+                    quantityType.setSelectedItem(qtytype);
                     productName.setText(prodName);
 
                     productCreate.setEnabled(false);
@@ -131,9 +134,15 @@ public class StockManagementProduct extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) ProductTable.getModel();
         model.setRowCount(0);
 
-        String query = "SELECT sp.stock_product_id, sp.title, s.status AS status " +
+        // String query = "SELECT sp.stock_product_id, sp.title, s.status AS status,
+        // tp.type AS quantityType " +
+        // "FROM stock_product sp " +
+        // "JOIN status s ON sp.status_id = s.id";
+
+        String query = "SELECT sp.stock_product_id, sp.title, s.status AS status, qt.type AS quantityType " +
                 "FROM stock_product sp " +
-                "JOIN status s ON sp.status_id = s.id";
+                "JOIN status s ON sp.status_id = s.id " +
+                "JOIN qty_type qt ON sp.qty_type_id = qt.id";
 
         try {
             ResultSet rs = MySQL2.executeSearch(query);
@@ -141,11 +150,13 @@ public class StockManagementProduct extends javax.swing.JPanel {
             while (rs.next()) {
                 String productID = rs.getString("stock_product_id");
                 String title = rs.getString("title");
+                String qtytype = rs.getString("quantityType");
                 String status = rs.getString("status");
 
                 model.addRow(new Object[] {
                         productID,
                         title,
+                        qtytype,
                         status
                 });
 
@@ -169,6 +180,19 @@ public class StockManagementProduct extends javax.swing.JPanel {
         }
     }
 
+    private void loadQuantityTypeBox() {
+        try {
+            ResultSet rs = MySQL2.executeSearch("SELECT type FROM qty_type");
+            quantityType.removeAllItems();
+            while (rs.next()) {
+                quantityType.addItem(rs.getString("type"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error loading Quantity Type Selection Box: " + e.getMessage());
+        }
+    }
+
     private void searchProducts() {
         String keyword = productSearch.getText().trim();
 
@@ -181,13 +205,15 @@ public class StockManagementProduct extends javax.swing.JPanel {
         }
 
         String query = String.format(
-                "SELECT p.stock_product_id, p.title, st.status " +
+                "SELECT p.stock_product_id, p.title, st.status, qt.type " +
                         "FROM stock_product p " +
                         "JOIN status st ON p.status_id = st.id " +
+                        "JOIN qty_type qt ON p.qty_type_id = qt.id " +
                         "WHERE p.stock_product_id LIKE '%%%s%%' OR " +
                         "p.title LIKE '%%%s%%' OR " +
+                        "qt.type LIKE '%%%s%%' OR " +
                         "st.status LIKE '%%%s%%'",
-                keyword, keyword, keyword);
+                keyword, keyword, keyword, keyword);
 
         try {
             ResultSet rs = MySQL2.executeSearch(query);
@@ -199,9 +225,10 @@ public class StockManagementProduct extends javax.swing.JPanel {
 
                 String stockProductID = rs.getString("stock_product_id");
                 String title = rs.getString("title");
+                String qttype = rs.getString("type");
                 String status = rs.getString("status");
 
-                model.addRow(new Object[] { stockProductID, title, status });
+                model.addRow(new Object[] { stockProductID, title, qttype, status });
 
             }
 
@@ -210,7 +237,7 @@ public class StockManagementProduct extends javax.swing.JPanel {
                         JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error searching supplier data: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error searching Stock Products data: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -235,6 +262,7 @@ public class StockManagementProduct extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -247,6 +275,7 @@ public class StockManagementProduct extends javax.swing.JPanel {
         productUpdate = new javax.swing.JButton();
         productStatus = new javax.swing.JComboBox<>();
         resetName = new javax.swing.JButton();
+        quantityType = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         productSearch = new javax.swing.JTextField();
         searchReset = new javax.swing.JButton();
@@ -256,13 +285,13 @@ public class StockManagementProduct extends javax.swing.JPanel {
         ProductTable.setBackground(new java.awt.Color(0, 0, 0));
         ProductTable.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][] {
-                        { null, null, null },
-                        { null, null, null },
-                        { null, null, null },
-                        { null, null, null }
+                        { null, null, null, null },
+                        { null, null, null, null },
+                        { null, null, null, null },
+                        { null, null, null, null }
                 },
                 new String[] {
-                        "Product ID", "Name", "Status"
+                        "Product ID", "Name", "Quantity Type", "Status"
                 }) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -313,6 +342,9 @@ public class StockManagementProduct extends javax.swing.JPanel {
             }
         });
 
+        quantityType.setModel(
+                new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -322,15 +354,16 @@ public class StockManagementProduct extends javax.swing.JPanel {
                                         .addGroup(jPanel2Layout.createSequentialGroup()
                                                 .addGap(17, 17, 17)
                                                 .addGroup(jPanel2Layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
+                                                                false)
                                                         .addComponent(jLabel1)
                                                         .addComponent(productName,
                                                                 javax.swing.GroupLayout.PREFERRED_SIZE, 346,
                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(productStatus,
-                                                                javax.swing.GroupLayout.Alignment.TRAILING,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 113,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                        .addComponent(productStatus, 0,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(quantityType, 0,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                         .addGroup(jPanel2Layout.createSequentialGroup()
                                                 .addGap(112, 112, 112)
                                                 .addGroup(jPanel2Layout
@@ -353,7 +386,10 @@ public class StockManagementProduct extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(productName, javax.swing.GroupLayout.PREFERRED_SIZE,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(13, 13, 13)
+                                .addComponent(quantityType, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(productStatus, javax.swing.GroupLayout.PREFERRED_SIZE,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
@@ -372,7 +408,7 @@ public class StockManagementProduct extends javax.swing.JPanel {
                 productSearchActionPerformed(evt);
             }
         });
-        searchReset.setBackground(new java.awt.Color(255, 51, 51));
+
         searchReset.setText("Reset Search");
         searchReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -447,9 +483,20 @@ public class StockManagementProduct extends javax.swing.JPanel {
 
             String productId = ProductTable.getValueAt(selectedRow, 0).toString();
             String name = productName.getText().trim();
+            String qtyType = (String) quantityType.getSelectedItem();
             String status = (String) productStatus.getSelectedItem();
 
             if (!validateInput(name)) {
+                return;
+            }
+
+            String qtTypeQuery = "SELECT id FROM qty_type WHERE type = '" + qtyType.replace("'", "''") + "'";
+            ResultSet qtTypeRs = MySQL2.executeSearch(qtTypeQuery);
+            int qtTypeID = -1;
+            if (qtTypeRs.next()) {
+                qtTypeID = qtTypeRs.getInt("id");
+            } else {
+                JOptionPane.showMessageDialog(this, "Error: Quantity Type ID not found.");
                 return;
             }
 
@@ -468,6 +515,7 @@ public class StockManagementProduct extends javax.swing.JPanel {
 
             String updateQuery = "UPDATE stock_product SET " +
                     "title = '" + name + "', " +
+                    "qty_type_id = " + qtTypeID + ", " + // Added comma here
                     "status_id = " + statusId + " " +
                     "WHERE stock_product_id = '" + productId + "'";
 
@@ -506,6 +554,7 @@ public class StockManagementProduct extends javax.swing.JPanel {
     private void productCreateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_productCreateActionPerformed
         String prodname = productName.getText().trim();
         String status = (String) productStatus.getSelectedItem();
+        String qtyType = (String) quantityType.getSelectedItem();
         String productID = generateProductId();
 
         if (!validateInput(prodname)) {
@@ -532,12 +581,23 @@ public class StockManagementProduct extends javax.swing.JPanel {
                         return;
                     }
 
+                    String qtTypeQuery = "SELECT id FROM qty_type WHERE type = '" + qtyType.replace("'", "''") + "'";
+                    ResultSet qtTypeRs = MySQL2.executeSearch(qtTypeQuery);
+                    int qtTypeID = -1;
+                    if (qtTypeRs.next()) {
+                        qtTypeID = qtTypeRs.getInt("id");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error: Quantity Type ID not found.");
+                        return;
+                    }
+
                     String query = String.format(
-                            "INSERT INTO stock_product (stock_product_id, title, status_id) " +
-                                    "VALUES ('%s', '%s', %d)",
+                            "INSERT INTO stock_product (stock_product_id, title, status_id, qty_type_id) " +
+                                    "VALUES ('%s', '%s', %d, %d)",
                             productID.replace("'", "''"),
                             prodname.replace("'", "''"),
-                            statusId);
+                            statusId,
+                            qtTypeID);
 
                     MySQL2.executeIUD(query);
                     JOptionPane.showMessageDialog(this, "Product Created Successfully!");
@@ -569,6 +629,7 @@ public class StockManagementProduct extends javax.swing.JPanel {
     private javax.swing.JTextField productSearch;
     private javax.swing.JComboBox<String> productStatus;
     private javax.swing.JButton productUpdate;
+    private javax.swing.JComboBox<String> quantityType;
     private javax.swing.JButton resetName;
     private javax.swing.JButton searchReset;
     // End of variables declaration//GEN-END:variables
