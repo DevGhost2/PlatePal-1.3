@@ -1,0 +1,1 @@
+productSELECT * FROM `product` INNER JOIN `product_images` ON `product`.`id`=`product_images`.`product_id` INNER JOIN `sub_category` ON `product`.`sub_category_id`=`sub_category`.`id` WHERE `title` LIKE '%ko%' AND `sub_category`.`title`='Rice'
