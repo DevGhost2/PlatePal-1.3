@@ -84,7 +84,7 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="selectedSupplierID" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="selectStockProduct1" alignment="0" pref="146" max="32767" attributes="0"/>
+                                      <Component id="selectSupplier" alignment="0" pref="146" max="32767" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -108,7 +108,7 @@
                       <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="selectStockProduct" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
-                              <Component id="selectStockProduct1" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                              <Component id="selectSupplier" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -262,7 +262,7 @@
             <Property name="text" type="java.lang.String" value="Supplier ID"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="selectStockProduct1">
+        <Component class="javax.swing.JButton" name="selectSupplier">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="cc" green="0" red="0" type="rgb"/>
@@ -273,7 +273,7 @@
             <Property name="text" type="java.lang.String" value="Select Supplier"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectStockProduct1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectSupplierActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

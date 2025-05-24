@@ -29,9 +29,6 @@ public class StockManagement extends javax.swing.JFrame {
     private int positionX = 0, positionY = 0;
     private int extendedState = 1;
 
-    private static int branchID = 1;
-    private static int employeeID = 1;
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
