@@ -226,17 +226,14 @@ CREATE TABLE IF NOT EXISTS `grn` (
   `date` datetime NOT NULL,
   `branch_id` int NOT NULL,
   `employee_id` int NOT NULL,
-  `purchase_order_id` int NOT NULL,
   `supplier_id` int NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `grn_id` (`grn_id`),
   KEY `fk_grn_branch1_idx` (`branch_id`),
   KEY `fk_grn_employee1_idx` (`employee_id`),
-  KEY `fk_grn_purchase_order1_idx` (`purchase_order_id`),
   KEY `fk_grn_supplier1_idx` (`supplier_id`),
   CONSTRAINT `fk_grn_branch1` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`id`),
   CONSTRAINT `fk_grn_employee1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`),
-  CONSTRAINT `fk_grn_purchase_order1` FOREIGN KEY (`purchase_order_id`) REFERENCES `purchase_order` (`id`),
   CONSTRAINT `fk_grn_supplier1` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
@@ -377,31 +374,31 @@ CREATE TABLE IF NOT EXISTS `product` (
 
 -- Dumping data for table 123.product: ~18 rows (approximately)
 INSERT INTO `product` (`id`, `title`, `product_id`, `description`, `added_date`, `product_status_id`, `sub_category_id`, `sellingCount`) VALUES
-	(1, 'Vegetable Rice', 'pdct001', 'dadadeaw', '2025-05-21 22:10:07', 1, 1, 21),
-	(2, 'Egg Rice', 'pdct002', NULL, '2025-05-21 22:10:46', 1, 1, 32),
-	(3, 'Chicken Rice', 'pdct003', NULL, '2025-05-21 22:11:13', 1, 1, 345),
-	(4, 'Pork Rice', 'pdct004', NULL, '2025-05-21 22:11:39', 1, 1, 100),
-	(5, 'Fish Rice', 'pdct005', NULL, '2025-05-21 22:12:32', 1, 1, 48),
-	(6, 'Sea Food Rice', 'pdct006', NULL, '2025-05-21 22:12:52', 1, 1, 60),
-	(7, 'Mixed Rice', 'pdct007', NULL, '2025-05-21 22:13:25', 1, 1, 97),
-	(8, 'Cheese Rice', 'pdct008', NULL, '2025-05-21 22:14:28', 1, 1, 22),
-	(9, 'Vegetable Kottu', 'pdct009', NULL, '2025-05-21 22:15:51', 1, 2, 44),
-	(10, 'Egg Kottu', 'pdct010', NULL, '2025-05-21 22:16:34', 1, 2, 67),
-	(11, 'Chicken Kottu', 'pdct011', NULL, '2025-05-21 22:17:05', 1, 2, 600),
-	(12, 'Pork Kottu', 'pdct012', NULL, '2025-05-21 22:17:59', 1, 2, 307),
-	(13, 'Fish Kottu', 'pdct013', NULL, '2025-05-21 22:18:52', 1, 2, 27),
-	(14, 'Sea Food Kottu', 'pdct014', NULL, '2025-05-21 22:19:19', 1, 2, 75),
-	(15, 'Mixed Kottu', 'pdct015', NULL, '2025-05-21 22:20:00', 1, 2, 267),
-	(16, 'Cheese Kottu', 'pdct016', NULL, '2025-05-21 22:21:32', 1, 2, 127),
-	(17, 'Noodles Kottu', 'pdct017', NULL, '2025-05-21 22:21:56', 1, 2, 65),
-	(18, 'String Hopper Kottu', 'pdct018', NULL, '2025-05-21 22:22:42', 1, 2, 45);
+	(1, 'Vegetable Rice', 'pdct001', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:10:07', 1, 1, 21),
+	(2, 'Egg Rice', 'pdct002', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:10:46', 1, 1, 32),
+	(3, 'Chicken Rice', 'pdct003', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:11:13', 1, 1, 345),
+	(4, 'Pork Rice', 'pdct004', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:11:39', 1, 1, 100),
+	(5, 'Fish Rice', 'pdct005', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:12:32', 1, 1, 48),
+	(6, 'Sea Food Rice', 'pdct006', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:12:52', 1, 1, 60),
+	(7, 'Mixed Rice', 'pdct007', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:13:25', 1, 1, 97),
+	(8, 'Cheese Rice', 'pdct008', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:14:28', 1, 1, 22),
+	(9, 'Vegetable Kottu', 'pdct009', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:15:51', 1, 2, 44),
+	(10, 'Egg Kottu', 'pdct010', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:16:34', 1, 2, 67),
+	(11, 'Chicken Kottu', 'pdct011', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:17:05', 1, 2, 600),
+	(12, 'Pork Kottu', 'pdct012', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:17:59', 1, 2, 307),
+	(13, 'Fish Kottu', 'pdct013', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:18:52', 1, 2, 27),
+	(14, 'Sea Food Kottu', 'pdct014', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:19:19', 1, 2, 75),
+	(15, 'Mixed Kottu', 'pdct015', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:20:00', 1, 2, 267),
+	(16, 'Cheese Kottu', 'pdct016', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:21:32', 1, 2, 127),
+	(17, 'Noodles Kottu', 'pdct017', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:21:56', 1, 2, 65),
+	(18, 'String Hopper Kottu', 'pdct018', 'The flavors in this are just incredible – a perfect blend that really hits the spot.', '2025-05-21 22:22:42', 1, 2, 45);
 
 -- Dumping structure for table 123.product_has_size
 CREATE TABLE IF NOT EXISTS `product_has_size` (
   `id` int NOT NULL AUTO_INCREMENT,
   `product_id` int NOT NULL,
   `size_id` int NOT NULL,
-  `price` varchar(45) NOT NULL,
+  `price` varchar(45) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `fk_product_has_size_size1_idx` (`size_id`),
   KEY `fk_product_has_size_product1_idx` (`product_id`),
@@ -409,7 +406,7 @@ CREATE TABLE IF NOT EXISTS `product_has_size` (
   CONSTRAINT `fk_product_has_size_size1` FOREIGN KEY (`size_id`) REFERENCES `size` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.product_has_size: ~0 rows (approximately)
+-- Dumping data for table 123.product_has_size: ~8 rows (approximately)
 INSERT INTO `product_has_size` (`id`, `product_id`, `size_id`, `price`) VALUES
 	(1, 1, 1, '600'),
 	(2, 1, 2, '1000'),
@@ -562,7 +559,7 @@ CREATE TABLE IF NOT EXISTS `size` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.size: ~0 rows (approximately)
+-- Dumping data for table 123.size: ~2 rows (approximately)
 INSERT INTO `size` (`id`, `size_type`) VALUES
 	(1, 'M'),
 	(2, 'Lg'),
