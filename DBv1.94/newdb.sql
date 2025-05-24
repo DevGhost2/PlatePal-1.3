@@ -406,7 +406,7 @@ CREATE TABLE IF NOT EXISTS `product_has_size` (
   CONSTRAINT `fk_product_has_size_size1` FOREIGN KEY (`size_id`) REFERENCES `size` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.product_has_size: ~8 rows (approximately)
+-- Dumping data for table 123.product_has_size: ~9 rows (approximately)
 INSERT INTO `product_has_size` (`id`, `product_id`, `size_id`, `price`) VALUES
 	(1, 1, 1, '600'),
 	(2, 1, 2, '1000'),
@@ -428,7 +428,7 @@ CREATE TABLE IF NOT EXISTS `product_images` (
   CONSTRAINT `fk_product_images_product1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.product_images: ~17 rows (approximately)
+-- Dumping data for table 123.product_images: ~18 rows (approximately)
 INSERT INTO `product_images` (`id`, `url`, `product_id`) VALUES
 	(1, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 1),
 	(2, 'C:\\Users\\USER\\Documents\\NetBeansProjects\\PlatePal1.3\\src\\resourcess\\150logo.png', 2),
@@ -559,7 +559,7 @@ CREATE TABLE IF NOT EXISTS `size` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table 123.size: ~2 rows (approximately)
+-- Dumping data for table 123.size: ~3 rows (approximately)
 INSERT INTO `size` (`id`, `size_type`) VALUES
 	(1, 'M'),
 	(2, 'Lg'),
