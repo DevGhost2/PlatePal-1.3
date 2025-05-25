@@ -21,7 +21,7 @@ public class StockManagementGRN extends javax.swing.JPanel {
 
         // ⚠️Whutto, Bota ona pamkak me pahala thiyena variable ekata koraam.⚠️
         private static int branchID = 1; // ⬅️ employee id eka kohomahari me variable ekata load karaam. SQL query wenas
-        private static int employeeID = 1; // koranda yannepa. query wenas korala kela unoth api na.
+        private static int employeeID = 126; // koranda yannepa. query wenas korala kela unoth api na.
 
         /**
          * Creates new form StockManagementGRN
@@ -37,11 +37,23 @@ public class StockManagementGRN extends javax.swing.JPanel {
 
         }
 
+        private void clearFields() {
+                selectedStockProduct.setText("");
+                selectedStockProductID.setText("");
+                price.setText("");
+                quantity.setText("");
+                totalBill.setText("");
+                balance.setText("");
+                selectedSupplierName.setText("");
+                selectedSupplierID.setText("");
+                searchBar.setText("");
+        }
+
         private String generateID(String column, String table, String Prefix) {
                 int maxId = 0;
                 Prefix = Prefix.trim();
                 try {
-                        ResultSet rs = MySQL2.executeSearch(String.format("SELECT '%s' FROM '%s'", column, table));
+                        ResultSet rs = MySQL2.executeSearch(String.format("SELECT %s FROM %s", column, table));
                         while (rs.next()) {
                                 String id = rs.getString(column).replace(Prefix, "");
                                 int num = Integer.parseInt(id);
@@ -53,6 +65,37 @@ public class StockManagementGRN extends javax.swing.JPanel {
                         e.printStackTrace();
                 }
                 return Prefix + String.format("%04d", maxId + 1);
+        }
+
+        private boolean validateInput(String quantity, String price, String amountPaid) {
+                StringBuilder errorMsg = new StringBuilder();
+
+                // Quantity: whole number only, no decimals
+                String quantityRegex = "^\\d+$";
+
+                // Price and Amount Paid: number with optional decimal part
+                String decimalRegex = "^\\d+(\\.\\d+)?$";
+
+                if (!quantity.matches(quantityRegex)) {
+                        errorMsg.append("- Quantity must be a whole number (no decimals allowed).\n");
+                }
+
+                if (!price.matches(decimalRegex)) {
+                        errorMsg.append("- Price must be a valid number (decimals allowed).\n");
+                }
+
+                if (!amountPaid.matches(decimalRegex)) {
+                        errorMsg.append("- Amount Paid must be a valid number (decimals allowed).\n");
+                }
+
+                if (errorMsg.length() > 0) {
+                        JOptionPane.showMessageDialog(null,
+                                        "Please fix the following:\n\n" + errorMsg.toString(),
+                                        "Validation Error", JOptionPane.WARNING_MESSAGE);
+                        return false;
+                }
+
+                return true;
         }
 
         private void loadGRNTable() {
@@ -101,6 +144,7 @@ public class StockManagementGRN extends javax.swing.JPanel {
         // <editor-fold defaultstate="collapsed" desc="Generated
         // <editor-fold defaultstate="collapsed" desc="Generated
         // <editor-fold defaultstate="collapsed" desc="Generated
+        // <editor-fold defaultstate="collapsed" desc="Generated
         // Code">//GEN-BEGIN:initComponents
         private void initComponents() {
 
@@ -122,8 +166,6 @@ public class StockManagementGRN extends javax.swing.JPanel {
                 selectedSupplierID = new javax.swing.JTextField();
                 jLabel7 = new javax.swing.JLabel();
                 selectSupplier = new javax.swing.JButton();
-                jScrollPane1 = new javax.swing.JScrollPane();
-                grnTable = new javax.swing.JTable();
                 jPanel2 = new javax.swing.JPanel();
                 jLabel8 = new javax.swing.JLabel();
                 jLabel9 = new javax.swing.JLabel();
@@ -132,18 +174,11 @@ public class StockManagementGRN extends javax.swing.JPanel {
                 totalBill = new javax.swing.JTextField();
                 balance = new javax.swing.JTextField();
                 createGRN = new javax.swing.JButton();
+                jScrollPane1 = new javax.swing.JScrollPane();
+                grnTable = new javax.swing.JTable();
 
                 jPanel1.setBackground(new java.awt.Color(0, 0, 0));
                 jPanel1.setForeground(new java.awt.Color(255, 255, 255));
-
-                selectSupplier.setBackground(new java.awt.Color(0, 0, 204));
-                selectSupplier.setForeground(new java.awt.Color(255, 255, 255));
-                selectSupplier.setText("Select Supplier");
-                selectSupplier.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                selectSupplierActionPerformed(evt);
-                        }
-                });
 
                 selectStockProduct.setBackground(new java.awt.Color(0, 153, 51));
                 selectStockProduct.setForeground(new java.awt.Color(255, 255, 255));
@@ -302,7 +337,7 @@ public class StockManagementGRN extends javax.swing.JPanel {
                                                                                                                                                                 .addComponent(selectSupplier,
                                                                                                                                                                                 javax.swing.GroupLayout.Alignment.LEADING,
                                                                                                                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                                                                                                                146,
+                                                                                                                                                                                149,
                                                                                                                                                                                 Short.MAX_VALUE)
                                                                                                                                                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING,
                                                                                                                                                                                 jPanel1Layout.createSequentialGroup()
@@ -407,20 +442,8 @@ public class StockManagementGRN extends javax.swing.JPanel {
                                                                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)))
                                                                 .addGap(23, 23, 23)));
 
-                grnTable.setBackground(new java.awt.Color(0, 0, 0));
-                grnTable.setForeground(new java.awt.Color(255, 255, 255));
-                grnTable.setModel(new javax.swing.table.DefaultTableModel(
-                                new Object[][] {
-                                                { null, null, null, null, null, null },
-                                                { null, null, null, null, null, null },
-                                                { null, null, null, null, null, null },
-                                                { null, null, null, null, null, null }
-                                },
-                                new String[] {
-                                                "GoodReceive ID", "Stock Product ID", "Stock Product", "Quantity",
-                                                "Price", "Item Total"
-                                }));
-                jScrollPane1.setViewportView(grnTable);
+                jPanel2.setBackground(new java.awt.Color(0, 0, 0));
+                jPanel2.setForeground(new java.awt.Color(255, 255, 255));
 
                 jLabel8.setText("Total Bill");
 
@@ -491,7 +514,7 @@ public class StockManagementGRN extends javax.swing.JPanel {
                                                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                                                 146,
                                                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                                .addGap(13, 13, 13)));
+                                                                .addContainerGap()));
                 jPanel2Layout.setVerticalGroup(
                                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(jPanel2Layout.createSequentialGroup()
@@ -524,7 +547,22 @@ public class StockManagementGRN extends javax.swing.JPanel {
                                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                .addContainerGap(34, Short.MAX_VALUE)));
+                                                                .addContainerGap(15, Short.MAX_VALUE)));
+
+                grnTable.setBackground(new java.awt.Color(0, 0, 0));
+                grnTable.setForeground(new java.awt.Color(255, 255, 255));
+                grnTable.setModel(new javax.swing.table.DefaultTableModel(
+                                new Object[][] {
+                                                { null, null, null, null, null, null },
+                                                { null, null, null, null, null, null },
+                                                { null, null, null, null, null, null },
+                                                { null, null, null, null, null, null }
+                                },
+                                new String[] {
+                                                "GoodReceive ID", "Stock Product ID", "Stock Product", "Quantity",
+                                                "Price", "Item Total"
+                                }));
+                jScrollPane1.setViewportView(grnTable);
 
                 javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
                 this.setLayout(layout);
@@ -532,9 +570,15 @@ public class StockManagementGRN extends javax.swing.JPanel {
                                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jScrollPane1));
+                                                .addGroup(layout.createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addGroup(layout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                .addComponent(jScrollPane1)
+                                                                                .addComponent(jPanel2,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE))));
                 layout.setVerticalGroup(
                                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(layout.createSequentialGroup()
@@ -542,16 +586,12 @@ public class StockManagementGRN extends javax.swing.JPanel {
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addGap(0, 0, 0)
                                                                 .addComponent(jScrollPane1,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                346,
+                                                                                311,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                Short.MAX_VALUE)
+                                                                .addGap(0, 0, 0)
                                                                 .addComponent(jPanel2,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -580,42 +620,93 @@ public class StockManagementGRN extends javax.swing.JPanel {
                 String formattedDateTime = now.format(formatter);
                 String paidamntText = paidAmount.getText().trim();
                 String supplier = selectedSupplierID.getText().trim();
+                String quantityText = quantity.getText().trim();
+                String pString = price.getText().trim();
 
                 String stockID = generateID("stock_id", "stock", "STK");
                 String grnID = generateID("grn_id", "grn", "GRN");
 
-                try {
-                        String stockQuery = String.format("INSERT INTO stock (stock_id, added_date, branch_id) " +
-                                        "VALUES ('%s', '%s', %d)",
-                                        stockID.replace("'", "''"),
-                                        formattedDateTime.replace("'", "''"),
-                                        branchID);
-                        
-                        String supplierIDQuery = "SELECT id FROM supplier WHERE supplier_id = '" + supplier.replace("'", "''") + "'";
-                        ResultSet supplierIdRs = MySQL2.executeSearch(supplierIDQuery);
-                        int supplierId = -1;
-                        if (supplierIdRs.next()) {
-                                supplierId = supplierIdRs.getInt("id");
-                        } else {
-                        JOptionPane.showMessageDialog(this, "Error: supplier id not found.");
+                if (!validateInput(quantityText, pString, paidamntText)) {
                         return;
-                    }
-                        double paidamnt = Double.parseDouble(paidamntText);
+                } else {
+                        try {
+                                String stockQuery = String.format(
+                                                "INSERT INTO stock (stock_id, added_date, branch_id) " +
+                                                                "VALUES ('%s', '%s', %d)",
+                                                stockID.replace("'", "''"),
+                                                formattedDateTime.replace("'", "''"),
+                                                branchID);
 
-                        String grnQuery = String.format("INSERT INTO grn (grn_id, paid_amount, date, branch_id, employee_id, supplier_id) " +
-                        "VALUES ('%s', %d, '%s', %d, %d, %d)",
-                        grnID.replace("'", "''"),
-                        paidamnt,
-                        formattedDateTime,
-                        branchID,
-                        employeeID,
-                        supplierId)
+                                MySQL2.executeIUD(stockQuery);
 
-                        MySQL2.executeIUD(stockQuery);
-                } catch (Exception e) {
-                        JOptionPane.showMessageDialog(this, "Operation Error: " + e.getMessage(),
-                                        "Error: ", JOptionPane.WARNING_MESSAGE);
-                        e.printStackTrace();
+                                String supplierIDQuery = "SELECT id FROM supplier WHERE supplier_id = '"
+                                                + supplier.replace("'", "''") + "'";
+                                ResultSet supplierIdRs = MySQL2.executeSearch(supplierIDQuery);
+                                int supplierId = -1;
+                                if (supplierIdRs.next()) {
+                                        supplierId = supplierIdRs.getInt("id");
+                                } else {
+                                        JOptionPane.showMessageDialog(this, "Error: supplier id not found.");
+                                        return;
+                                }
+                                double paidamnt = Double.parseDouble(paidamntText);
+
+                                String grnQuery = String.format(
+                                                "INSERT INTO grn (grn_id, paid_amount, date, branch_id, employee_id, supplier_id) "
+                                                                +
+                                                                "VALUES ('%s', %f, '%s', %d, %d, %d)",
+                                                grnID.replace("'", "''"),
+                                                paidamnt,
+                                                formattedDateTime,
+                                                branchID,
+                                                employeeID,
+                                                supplierId);
+
+                                MySQL2.executeIUD(grnQuery);
+
+                                String grnIdQuery = "SELECT id FROM grn WHERE grn_id = '" + grnID.replace("'", "''")
+                                                + "'";
+                                ResultSet grnIdResult = MySQL2.executeSearch(grnIdQuery);
+                                int grnIdINT = -1;
+
+                                if (grnIdResult.next()) {
+                                        grnIdINT = grnIdResult.getInt("id");
+                                } else {
+                                        JOptionPane.showMessageDialog(this, "error GRN ID not found.");
+                                        return;
+                                }
+
+                                String stockIdQuery = "SELECT id FROM stock WHERE stock_id = '"
+                                                + stockID.replace("'", "''")
+                                                + "'";
+                                ResultSet stockIdResult = MySQL2.executeSearch(stockIdQuery);
+                                int stockIdINT = -1;
+
+                                if (stockIdResult.next()) {
+                                        stockIdINT = stockIdResult.getInt("id");
+                                } else {
+                                        JOptionPane.showMessageDialog(this, "error Stock ID not found.");
+                                        return;
+                                }
+
+                                double priceDouble = Double.parseDouble(pString);
+                                int quantityInt = Integer.parseInt(quantityText);
+
+                                String grnItemQuery = String.format(
+                                                "INSERT INTO grn_item (quantity, price, grn_id, stock_id) " +
+                                                                "VALUES (%d, %f, %d, %d)",
+                                                quantityInt, priceDouble, grnIdINT, stockIdINT);
+
+                                MySQL2.executeIUD(grnItemQuery);
+
+                                loadGRNTable();
+                                clearFields();
+
+                        } catch (Exception e) {
+                                JOptionPane.showMessageDialog(this, "Operation Error: " + e.getMessage(),
+                                                "Error: ", JOptionPane.WARNING_MESSAGE);
+                                e.printStackTrace();
+                        }
                 }
 
         }// GEN-LAST:event_createGRNActionPerformed
@@ -625,7 +716,7 @@ public class StockManagementGRN extends javax.swing.JPanel {
         }// GEN-LAST:event_selectedStockProductActionPerformed
 
         private void ResetFieldsActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ResetFieldsActionPerformed
-                // TODO add your handling code here:
+                clearFields();
         }// GEN-LAST:event_ResetFieldsActionPerformed
 
         private void selectStockProductActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_selectStockProductActionPerformed
