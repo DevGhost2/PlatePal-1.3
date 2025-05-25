@@ -5,19 +5,31 @@
 package gui;
 
 import java.sql.ResultSet;
-
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-import callbacks.SelectionListener;
-import model.MySQL2;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import javax.swing.Timer;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.event.DocumentListener;
+import model.MySQL2;
+import javax.swing.table.DefaultTableModel;
+import java.sql.PreparedStatement;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
  * @author Oshadha Bhanu
  */
 public class StockManagementGRN extends javax.swing.JPanel {
+
+        // don't touch these.
+        private Timer debounceTimer;
+        private int selectedRow = -1;
+        private double totalAmount;
 
         // ⚠️Whutto, Bota ona pamkak me pahala thiyena variable ekata koraam.⚠️
         private static int branchID = 1; // ⬅️ employee id eka kohomahari me variable ekata load karaam. SQL query wenas
@@ -29,11 +41,45 @@ public class StockManagementGRN extends javax.swing.JPanel {
         public StockManagementGRN() {
                 initComponents();
                 loadGRNTable();
+                totalAmount = calculateTotalFromSixthColumn(grnTable);
+                String totalAmountString = String.valueOf(totalAmount);
+                totalBill.setText(totalAmountString);
 
                 selectedSupplierName.setEnabled(false);
                 selectedSupplierID.setEnabled(false);
                 selectedStockProduct.setEnabled(false);
                 selectedStockProductID.setEnabled(false);
+
+                searchBar.getDocument().addDocumentListener(new DocumentListener() {
+                        private final int DEBOUNCE_DELAY = 300; // milliseconds
+
+                        public void insertUpdate(DocumentEvent e) {
+                                debounceSearch();
+                        }
+
+                        public void removeUpdate(DocumentEvent e) {
+                                debounceSearch();
+                        }
+
+                        public void changedUpdate(DocumentEvent e) {
+                                debounceSearch();
+                        }
+
+                        private void debounceSearch() {
+                                if (debounceTimer != null && debounceTimer.isRunning()) {
+                                        debounceTimer.restart();
+                                } else {
+                                        debounceTimer = new Timer(DEBOUNCE_DELAY, new ActionListener() {
+                                                public void actionPerformed(ActionEvent evt) {
+                                                        searchGRN();
+                                                        debounceTimer.stop();
+                                                }
+                                        });
+                                        debounceTimer.setRepeats(false);
+                                        debounceTimer.start();
+                                }
+                        }
+                });
 
         }
 
@@ -43,10 +89,29 @@ public class StockManagementGRN extends javax.swing.JPanel {
                 price.setText("");
                 quantity.setText("");
                 totalBill.setText("");
+                paidAmount.setText("");
                 balance.setText("");
                 selectedSupplierName.setText("");
                 selectedSupplierID.setText("");
                 searchBar.setText("");
+        }
+
+        private double calculateTotalFromSixthColumn(JTable table) {
+                double total = 0.0;
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+                for (int row = 0; row < model.getRowCount(); row++) {
+                        Object value = model.getValueAt(row, 5);
+                        if (value != null) {
+                                try {
+                                        total += Double.parseDouble(value.toString());
+                                } catch (NumberFormatException e) {
+                                        System.err.println("Invalid number at row " + row + ": " + value);
+                                }
+                        }
+                }
+
+                return total;
         }
 
         private String generateID(String column, String table, String Prefix) {
@@ -96,6 +161,63 @@ public class StockManagementGRN extends javax.swing.JPanel {
                 }
 
                 return true;
+        }
+
+        private void searchGRN() {
+                String keyword = searchBar.getText().trim();
+
+                DefaultTableModel model = (DefaultTableModel) grnTable.getModel();
+                model.setRowCount(0); // Clear table
+
+                if (keyword.isEmpty()) {
+                        loadGRNTable(); // fallback to full table load
+                        return;
+                }
+
+                String query = String.format(
+                                "SELECT gi.grn_id, sp.stock_product_id, sp.title, gi.quantity, gi.price " +
+                                                "FROM grn_item gi " +
+                                                "JOIN stock_product sp ON gi.stock_id = sp.id " +
+                                                "WHERE gi.grn_id LIKE '%%%s%%' OR " +
+                                                "sp.stock_product_id LIKE '%%%s%%' OR " +
+                                                "sp.title LIKE '%%%s%%' OR " +
+                                                "gi.quantity LIKE '%%%s%%' OR " +
+                                                "gi.price LIKE '%%%s%%'",
+                                keyword, keyword, keyword, keyword, keyword);
+
+                try {
+                        ResultSet rs = MySQL2.executeSearch(query);
+                        boolean hasResults = false;
+
+                        while (rs.next()) {
+                                hasResults = true;
+
+                                String grnId = rs.getString("grn_id");
+                                String stockProductId = rs.getString("stock_product_id");
+                                String stockProductName = rs.getString("title");
+                                int quantity = rs.getInt("quantity");
+                                double price = rs.getDouble("price");
+                                double itemTotal = quantity * price;
+
+                                model.addRow(new Object[] {
+                                                grnId,
+                                                stockProductId,
+                                                stockProductName,
+                                                quantity,
+                                                price,
+                                                itemTotal
+                                });
+                        }
+
+                        if (!hasResults) {
+                                JOptionPane.showMessageDialog(this, "No GRN items matched your search!", "No Results",
+                                                JOptionPane.INFORMATION_MESSAGE);
+                        }
+
+                } catch (Exception e) {
+                        JOptionPane.showMessageDialog(this, "Error searching GRN data: " + e.getMessage());
+                        e.printStackTrace();
+                }
         }
 
         private void loadGRNTable() {
