@@ -165,22 +165,22 @@ public class StockManagementGRN extends javax.swing.JPanel {
         private boolean validateInput(String quantity, String price, String amountPaid) {
                 StringBuilder errorMsg = new StringBuilder();
 
-                // Quantity: whole number only, no decimals
+                // Quantity: whole number only (no decimals, no negatives)
                 String quantityRegex = "^\\d+$";
 
-                // Price and Amount Paid: number with optional decimal part
+                // Price & Amount Paid: non-negative number with optional decimals
                 String decimalRegex = "^\\d+(\\.\\d+)?$";
 
                 if (!quantity.matches(quantityRegex)) {
-                        errorMsg.append("- Quantity must be a whole number (no decimals allowed).\n");
+                        errorMsg.append("- Quantity must be a whole number (no decimals or negatives allowed).\n");
                 }
 
                 if (!price.matches(decimalRegex)) {
-                        errorMsg.append("- Price must be a valid number (decimals allowed).\n");
+                        errorMsg.append("- Price must be a valid non-negative number (decimals allowed).\n");
                 }
 
                 if (!amountPaid.matches(decimalRegex)) {
-                        errorMsg.append("- Amount Paid must be a valid number (decimals allowed).\n");
+                        errorMsg.append("- Amount Paid must be a valid non-negative number (decimals allowed).\n");
                 }
 
                 if (errorMsg.length() > 0) {
