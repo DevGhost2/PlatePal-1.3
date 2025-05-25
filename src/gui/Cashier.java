@@ -5,8 +5,10 @@
 package gui;
 
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -14,20 +16,29 @@ import javax.swing.SwingUtilities;
  *
  * @author USER
  */
-
 //kari suraj
 public class Cashier extends javax.swing.JFrame {
 
+    private static Cashier cashier;
+    private int positionX = 0, positionY = 0;
+    private int extendedState = 1;
+    
     /**
      * Creates new form Cashier
      */
-    public Cashier() {
+    Cashier() {
         initComponents();
         jButton6.setVisible(false);
     }
+    
+    public static synchronized Cashier getInstance(){
+        if(cashier==null){
+            cashier=new Cashier();
+        }
+        return cashier;
+    }
 
-    private int positionX = 0, positionY = 0;
-    private int extendedState = 1;
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -153,7 +164,7 @@ public class Cashier extends javax.swing.JFrame {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 792, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 808, Short.MAX_VALUE)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -164,7 +175,7 @@ public class Cashier extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(10, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -199,30 +210,55 @@ public class Cashier extends javax.swing.JFrame {
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-admin-settings-male-25.png"))); // NOI18N
         jButton6.setText("                          PROFILE");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jButton7.setBackground(new java.awt.Color(51, 51, 51));
         jButton7.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
         jButton7.setForeground(new java.awt.Color(255, 255, 255));
         jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-note-25.png"))); // NOI18N
         jButton7.setText("                         INVOICE");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         jButton8.setBackground(new java.awt.Color(51, 51, 51));
         jButton8.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
         jButton8.setForeground(new java.awt.Color(255, 255, 255));
         jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-box-25.png"))); // NOI18N
         jButton8.setText("                         ORDERS");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
 
         jButton9.setBackground(new java.awt.Color(51, 51, 51));
         jButton9.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
         jButton9.setForeground(new java.awt.Color(255, 255, 255));
         jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-message-25.png"))); // NOI18N
         jButton9.setText("                        REQUEST");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
 
         jButton10.setBackground(new java.awt.Color(51, 51, 51));
         jButton10.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
         jButton10.setForeground(new java.awt.Color(255, 255, 255));
         jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-customers-25.png"))); // NOI18N
         jButton10.setText("                   CUSTOMER");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
 
         jButton11.setBackground(new java.awt.Color(255, 0, 51));
         jButton11.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
@@ -274,24 +310,14 @@ public class Cashier extends javax.swing.JFrame {
                 .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 282, Short.MAX_VALUE)
                 .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(280, Short.MAX_VALUE))
+                .addGap(10, 10, 10))
         );
 
         jPanel6.setBackground(new java.awt.Color(204, 204, 204));
         jPanel6.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        jPanel6.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -334,6 +360,9 @@ public class Cashier extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 //        this.setExtendedState(MAXIMIZED_BOTH);
+
+        setGridOnCashierInvoice();
+
         if (this.getExtendedState() != MAXIMIZED_BOTH) {
             this.setExtendedState(MAXIMIZED_BOTH);
         } else {
@@ -341,8 +370,25 @@ public class Cashier extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void setGridOnCashierInvoice() {
+        Thread t = new Thread(
+                () -> {
+
+                    try {
+                        Thread.sleep(200);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    CashierInvoice.getInstance().loadProducts();
+                }
+        );
+
+        t.start();
+    }
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+
         SystemExit();
 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -402,6 +448,44 @@ public class Cashier extends javax.swing.JFrame {
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         SystemExit();
     }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+
+        CashierInvoice ci = CashierInvoice.getInstance();
+        
+        jPanel6.removeAll();
+        jPanel6.add(ci, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
+        setSelectedButton(jButton7);
+        ci.getInstance().loadProducts();
+
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void setSelectedButton(JButton btn) {
+        jButton6.setBackground(new Color(51, 51, 51));
+        jButton7.setBackground(new Color(51, 51, 51));
+        jButton8.setBackground(new Color(51, 51, 51));
+        jButton9.setBackground(new Color(51, 51, 51));
+        jButton10.setBackground(new Color(51, 51, 51));
+
+        btn.setBackground(new Color(255, 82, 37));
+    }
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        setSelectedButton(jButton8);
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        setSelectedButton(jButton9);
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        setSelectedButton(jButton10);
+    }//GEN-LAST:event_jButton10ActionPerformed
 
     private void menuExpandLeft() {
         jButton6.setVisible(true);
@@ -481,7 +565,7 @@ public class Cashier extends javax.swing.JFrame {
             Login login = new Login();
             login.setVisible(true);
         }
-        
+
     }
 
     /**
@@ -494,7 +578,7 @@ public class Cashier extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Cashier().setVisible(true);
+                cashier.getInstance().setVisible(true);
             }
         });
     }

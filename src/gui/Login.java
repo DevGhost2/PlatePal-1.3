@@ -126,56 +126,61 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String email=jTextField1.getText();
-        String password=String.valueOf(jPasswordField1.getPassword());
-        
-        if(email.isEmpty()){
+        String email = jTextField1.getText();
+        String password = String.valueOf(jPasswordField1.getPassword());
+
+        if (email.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter your email address.", "warning", JOptionPane.WARNING_MESSAGE);
-        }else if(!email.matches("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")){
+        } else if (!email.matches("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")) {
             JOptionPane.showMessageDialog(this, "Email address invalid, please try again.", "warning", JOptionPane.WARNING_MESSAGE);
-        }else if(password.isEmpty()){
+        } else if (password.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter your password", "warning", JOptionPane.WARNING_MESSAGE);
-        }else{
-        
-            //check the email and password from the database
+        } else {
+
             try {
-                ResultSet result=MySQL2.executeSearch("SELECT * FROM `employee` INNER JOIN `employee_role` ON `employee`.`employee_role_role_id`=`employee_role`.`role_id` WHERE `email`='"+email+"' AND `password`='"+password+"'");
-                
-                if(result.next()){
-                    String fName=result.getString("first_name");
-                    String lName=result.getString("last_name");
-                    String roleType=result.getString("type");
-                    
-                    if(roleType.equals("Cashier")){
+                ResultSet result = MySQL2.executeSearch("SELECT * FROM `employee` INNER JOIN `employee_role` ON `employee`.`employee_role_id`=`employee_role`.`id` WHERE `email`='" + email + "' AND `password`='" + password + "'");
+
+                if (result.next()) {
+
+                    model.Session.employeeId = result.getInt("id");
+                    model.Session.employeeName = result.getString("first_name") + " " + result.getString("last_name");
+
+                    String fName = result.getString("first_name");
+                    String lName = result.getString("last_name");
+                    String roleType = result.getString("type");
+
+                    if (roleType.equals("Cashier")) {
                         Cashier cashier = new Cashier();
                         cashier.setVisible(true);
                         this.dispose();
-                    }else if(roleType.equals("Reception")){
-                        Reciption reciption=new Reciption();
+                    } else if (roleType.equals("Reception")) {
+                        Reciption reciption = new Reciption();
                         reciption.setVisible(true);
                         this.dispose();
-                    }else if(roleType.equals("Financial Manager")){
-                        FinancialManagement fm= new FinancialManagement();
+                    } else if (roleType.equals("Financial Manager")) {
+                        FinancialManagement fm = new FinancialManagement();
                         fm.setVisible(true);
                         this.dispose();
-                    }else if(roleType.equals("Stock Management")){
-                        StockManagement sm= new StockManagement();
+                    } else if (roleType.equals("Stock Management")) {
+                        StockManagement sm = new StockManagement();
                         sm.setVisible(true);
+                        this.dispose();
+                    } else if (roleType.equals("Branch Admin")) {
+                        BranchAdmin BranchAdmin = new BranchAdmin();
+                        BranchAdmin.setVisible(true);
                         this.dispose();
                     }
 
-                    System.out.println(fName+" "+lName+" "+roleType);
-                    
+                    System.out.println(fName + " " + lName + " " + roleType);
 
-                    
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(this, "Entered email address or password is incorrect.");
                 }
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        
+
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -184,7 +189,7 @@ public class Login extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         FlatMacDarkLaf.setup();
-        
+
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
