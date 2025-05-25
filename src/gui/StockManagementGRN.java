@@ -4,6 +4,7 @@
  */
 package gui;
 
+import callbacks.*;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -79,6 +80,33 @@ public class StockManagementGRN extends javax.swing.JPanel {
                                         });
                                         debounceTimer.setRepeats(false);
                                         debounceTimer.start();
+                                }
+                        }
+                });
+
+                paidAmount.getDocument().addDocumentListener(new DocumentListener() {
+                        public void insertUpdate(DocumentEvent e) {
+                                updateBalance();
+                        }
+
+                        public void removeUpdate(DocumentEvent e) {
+                                updateBalance();
+                        }
+
+                        public void changedUpdate(DocumentEvent e) {
+                                updateBalance();
+                        }
+
+                        private void updateBalance() {
+                                try {
+                                        double total = Double.parseDouble(totalBill.getText().trim());
+                                        double paid = Double.parseDouble(paidAmount.getText().trim());
+                                        double balanceValue = total - paid;
+
+                                        balance.setText(String.format("%.2f", balanceValue));
+                                } catch (NumberFormatException ex) {
+                                        // Show empty or default if input is invalid
+                                        balance.setText("");
                                 }
                         }
                 });
