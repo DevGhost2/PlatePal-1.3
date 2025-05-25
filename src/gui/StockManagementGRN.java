@@ -49,6 +49,8 @@ public class StockManagementGRN extends javax.swing.JPanel {
                 selectedSupplierID.setEnabled(false);
                 selectedStockProduct.setEnabled(false);
                 selectedStockProductID.setEnabled(false);
+                totalBill.setEnabled(false);
+                balance.setEnabled(false);
 
                 searchBar.getDocument().addDocumentListener(new DocumentListener() {
                         private final int DEBOUNCE_DELAY = 300; // milliseconds
