@@ -24,7 +24,7 @@ public class StockManagement extends javax.swing.JFrame {
     public StockManagement() {
         initComponents();
         jButton6.setVisible(false);
-        
+
         StockManagementProduct SMProduct = new StockManagementProduct();
         jPanel6.removeAll();
         jPanel6.add(SMProduct, BorderLayout.CENTER);
@@ -408,7 +408,13 @@ public class StockManagement extends javax.swing.JFrame {
     }// GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        profile profile = new profile();
+
+        jPanel6.removeAll();
+        jPanel6.add(profile, BorderLayout.CENTER);
+
+        jPanel6.revalidate();
+        jPanel6.repaint();
     }// GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton12ActionPerformed

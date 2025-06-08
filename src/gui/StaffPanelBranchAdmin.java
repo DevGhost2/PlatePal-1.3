@@ -112,7 +112,6 @@ public class StaffPanelBranchAdmin extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
-        setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new java.awt.BorderLayout());
 
         jPanel1.setPreferredSize(new java.awt.Dimension(904, 100));
@@ -212,6 +211,9 @@ public class StaffPanelBranchAdmin extends javax.swing.JPanel {
 
         add(jPanel4, java.awt.BorderLayout.PAGE_END);
 
+        jScrollPane1.setBorder(null);
+
+        jTable1.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null},

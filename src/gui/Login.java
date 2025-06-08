@@ -5,7 +5,6 @@
 package gui;
 
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
-import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import model.MySQL2;
@@ -165,7 +164,7 @@ public class Login extends javax.swing.JFrame {
                         StockManagement sm = new StockManagement();
                         sm.setVisible(true);
                         this.dispose();
-                    } else if (roleType.equals("Branch Admin")) {
+                    } else if (roleType.equals("Branch Manager")) {
                         BranchAdmin BranchAdmin = new BranchAdmin();
                         BranchAdmin.setVisible(true);
                         this.dispose();

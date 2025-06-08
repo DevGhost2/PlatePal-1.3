@@ -37,7 +37,7 @@ public class addcustomer extends javax.swing.JFrame {
         rand = new Random().nextInt(10000
         ); 
         if (checkRandNumber()) {
-            String customerId = "CUST" + (rand); // CUST1000–CUST9999
+            String customerId = "CUST" + (rand); 
             jTextField1.setText(customerId);
             
         }else{

@@ -52,7 +52,7 @@ public class receptionreqest extends javax.swing.JPanel {
        ResultSet resultset = MySQL2.executeSearch("SELECT * FROM `employee_requests` WHERE employee_id = " + Session.employeeId);
 
 
-        // Updated table model with ID column
+    
         DefaultTableModel model = new DefaultTableModel(
             new Object[][]{},
             new String[]{"ID", "Type", "Date", "Description", "Status"}
@@ -69,7 +69,7 @@ public class receptionreqest extends javax.swing.JPanel {
             model.addRow(row);
         }
 
-        // Hide the ID column from the user
+      
         jTable1.getColumnModel().getColumn(0).setMinWidth(0);
         jTable1.getColumnModel().getColumn(0).setMaxWidth(0);
         jTable1.getColumnModel().getColumn(0).setWidth(0);

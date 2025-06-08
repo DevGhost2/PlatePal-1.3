@@ -22,23 +22,29 @@ public class Cashier extends javax.swing.JFrame {
     private static Cashier cashier;
     private int positionX = 0, positionY = 0;
     private int extendedState = 1;
-    
+
     /**
      * Creates new form Cashier
      */
     Cashier() {
         initComponents();
         jButton6.setVisible(false);
+        
+        CashierInvoice ci = CashierInvoice.getInstance();
+
+        jPanel6.removeAll();
+        jPanel6.add(ci, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
+        setSelectedButton(jButton7);
+        ci.getInstance().loadProducts();
     }
-    
-    public static synchronized Cashier getInstance(){
-        if(cashier==null){
-            cashier=new Cashier();
+
+    public static synchronized Cashier getInstance() {
+        if (cashier == null) {
+            cashier = new Cashier();
         }
         return cashier;
     }
-
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -442,7 +448,13 @@ public class Cashier extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        profile profile = new profile();
+
+        jPanel6.removeAll();
+        jPanel6.add(profile, BorderLayout.CENTER);
+
+        jPanel6.revalidate();
+        jPanel6.repaint();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
@@ -452,7 +464,7 @@ public class Cashier extends javax.swing.JFrame {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
 
         CashierInvoice ci = CashierInvoice.getInstance();
-        
+
         jPanel6.removeAll();
         jPanel6.add(ci, BorderLayout.CENTER);
         SwingUtilities.updateComponentTreeUI(jPanel6);
@@ -472,11 +484,22 @@ public class Cashier extends javax.swing.JFrame {
     }
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+        profile profile = new profile();
+
+        jPanel6.removeAll();
+        jPanel6.add(profile, BorderLayout.CENTER);
+
+        jPanel6.revalidate();
+        jPanel6.repaint();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         setSelectedButton(jButton8);
+
+        Orders Orders = new Orders();
+        jPanel6.removeAll();
+        jPanel6.add(Orders, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -484,6 +507,11 @@ public class Cashier extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        
+        jPanel6.removeAll();
+        jPanel6.add(CashierCustomer.getInstance());
+        SwingUtilities.updateComponentTreeUI(jPanel6);
+        
         setSelectedButton(jButton10);
     }//GEN-LAST:event_jButton10ActionPerformed
 

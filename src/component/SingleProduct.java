@@ -418,9 +418,9 @@ public class SingleProduct extends javax.swing.JDialog {
                 alreadyEnteredItem.set(3, String.valueOf(Integer.parseInt(alreadyEnteredItem.get(3)) + Integer.parseInt(jTextField1.getText())));
                 gui.CashierInvoice.getInstance().loadinvoiceItem();
 
-                System.out.println("meka variable" + clickedProductSize);
-
-                System.out.println("meka Array eka" + alreadyEnteredItem.get(2));
+//                System.out.println("meka variable" + clickedProductSize);
+//
+//                System.out.println("meka Array eka" + alreadyEnteredItem.get(2));
 
             }
 

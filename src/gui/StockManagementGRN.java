@@ -4,20 +4,33 @@
  */
 package gui;
 
+import callbacks.*;
 import java.sql.ResultSet;
-
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-import callbacks.SelectionListener;
-import model.MySQL2;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import javax.swing.Timer;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.event.DocumentListener;
+import model.MySQL2;
+import javax.swing.table.DefaultTableModel;
+import java.sql.PreparedStatement;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
  * @author Oshadha Bhanu
  */
 public class StockManagementGRN extends javax.swing.JPanel {
+
+        // don't touch these.
+        private Timer debounceTimer;
+        private int selectedRow = -1;
+        private double totalAmount;
 
         // ⚠️Whutto, Bota ona pamkak me pahala thiyena variable ekata koraam.⚠️
         private static int branchID = 1; // ⬅️ employee id eka kohomahari me variable ekata load karaam. SQL query wenas
@@ -29,12 +42,106 @@ public class StockManagementGRN extends javax.swing.JPanel {
         public StockManagementGRN() {
                 initComponents();
                 loadGRNTable();
+                totalAmount = calculateTotalFromSixthColumn(grnTable);
+                String totalAmountString = String.valueOf(totalAmount);
+                totalBill.setText(totalAmountString);
 
                 selectedSupplierName.setEnabled(false);
                 selectedSupplierID.setEnabled(false);
                 selectedStockProduct.setEnabled(false);
                 selectedStockProductID.setEnabled(false);
+                totalBill.setEnabled(false);
+                balance.setEnabled(false);
 
+                searchBar.getDocument().addDocumentListener(new DocumentListener() {
+                        private final int DEBOUNCE_DELAY = 300; // milliseconds
+
+                        public void insertUpdate(DocumentEvent e) {
+                                debounceSearch();
+                        }
+
+                        public void removeUpdate(DocumentEvent e) {
+                                debounceSearch();
+                        }
+
+                        public void changedUpdate(DocumentEvent e) {
+                                debounceSearch();
+                        }
+
+                        private void debounceSearch() {
+                                if (debounceTimer != null && debounceTimer.isRunning()) {
+                                        debounceTimer.restart();
+                                } else {
+                                        debounceTimer = new Timer(DEBOUNCE_DELAY, new ActionListener() {
+                                                public void actionPerformed(ActionEvent evt) {
+                                                        searchGRN();
+                                                        debounceTimer.stop();
+                                                }
+                                        });
+                                        debounceTimer.setRepeats(false);
+                                        debounceTimer.start();
+                                }
+                        }
+                });
+
+                paidAmount.getDocument().addDocumentListener(new DocumentListener() {
+                        public void insertUpdate(DocumentEvent e) {
+                                updateBalance();
+                        }
+
+                        public void removeUpdate(DocumentEvent e) {
+                                updateBalance();
+                        }
+
+                        public void changedUpdate(DocumentEvent e) {
+                                updateBalance();
+                        }
+
+                        private void updateBalance() {
+                                try {
+                                        double total = Double.parseDouble(totalBill.getText().trim());
+                                        double paid = Double.parseDouble(paidAmount.getText().trim());
+                                        double balanceValue = total - paid;
+
+                                        balance.setText(String.format("%.2f", balanceValue));
+                                } catch (NumberFormatException ex) {
+                                        // Show empty or default if input is invalid
+                                        balance.setText("");
+                                }
+                        }
+                });
+
+        }
+
+        private void clearFields() {
+                selectedStockProduct.setText("");
+                selectedStockProductID.setText("");
+                price.setText("");
+                quantity.setText("");
+                totalBill.setText("");
+                paidAmount.setText("");
+                balance.setText("");
+                selectedSupplierName.setText("");
+                selectedSupplierID.setText("");
+                searchBar.setText("");
+        }
+
+        private double calculateTotalFromSixthColumn(JTable table) {
+                double total = 0.0;
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+                for (int row = 0; row < model.getRowCount(); row++) {
+                        Object value = model.getValueAt(row, 5);
+                        if (value != null) {
+                                try {
+                                        total += Double.parseDouble(value.toString());
+                                } catch (NumberFormatException e) {
+                                        System.err.println("Invalid number at row " + row + ": " + value);
+                                }
+                        }
+                }
+
+                return total;
         }
 
         private String generateID(String column, String table, String Prefix) {
@@ -53,6 +160,94 @@ public class StockManagementGRN extends javax.swing.JPanel {
                         e.printStackTrace();
                 }
                 return Prefix + String.format("%04d", maxId + 1);
+        }
+
+        private boolean validateInput(String quantity, String price, String amountPaid) {
+                StringBuilder errorMsg = new StringBuilder();
+
+                // Quantity: whole number only (no decimals, no negatives)
+                String quantityRegex = "^\\d+$";
+
+                // Price & Amount Paid: non-negative number with optional decimals
+                String decimalRegex = "^\\d+(\\.\\d+)?$";
+
+                if (!quantity.matches(quantityRegex)) {
+                        errorMsg.append("- Quantity must be a whole number (no decimals or negatives allowed).\n");
+                }
+
+                if (!price.matches(decimalRegex)) {
+                        errorMsg.append("- Price must be a valid non-negative number (decimals allowed).\n");
+                }
+
+                if (!amountPaid.matches(decimalRegex)) {
+                        errorMsg.append("- Amount Paid must be a valid non-negative number (decimals allowed).\n");
+                }
+
+                if (errorMsg.length() > 0) {
+                        JOptionPane.showMessageDialog(null,
+                                        "Please fix the following:\n\n" + errorMsg.toString(),
+                                        "Validation Error", JOptionPane.WARNING_MESSAGE);
+                        return false;
+                }
+
+                return true;
+        }
+
+        private void searchGRN() {
+                String keyword = searchBar.getText().trim();
+
+                DefaultTableModel model = (DefaultTableModel) grnTable.getModel();
+                model.setRowCount(0); // Clear table
+
+                if (keyword.isEmpty()) {
+                        loadGRNTable(); // fallback to full table load
+                        return;
+                }
+
+                String query = String.format(
+                                "SELECT gi.grn_id, sp.stock_product_id, sp.title, gi.quantity, gi.price " +
+                                                "FROM grn_item gi " +
+                                                "JOIN stock_product sp ON gi.stock_id = sp.id " +
+                                                "WHERE gi.grn_id LIKE '%%%s%%' OR " +
+                                                "sp.stock_product_id LIKE '%%%s%%' OR " +
+                                                "sp.title LIKE '%%%s%%' OR " +
+                                                "gi.quantity LIKE '%%%s%%' OR " +
+                                                "gi.price LIKE '%%%s%%'",
+                                keyword, keyword, keyword, keyword, keyword);
+
+                try {
+                        ResultSet rs = MySQL2.executeSearch(query);
+                        boolean hasResults = false;
+
+                        while (rs.next()) {
+                                hasResults = true;
+
+                                String grnId = rs.getString("grn_id");
+                                String stockProductId = rs.getString("stock_product_id");
+                                String stockProductName = rs.getString("title");
+                                int quantity = rs.getInt("quantity");
+                                double price = rs.getDouble("price");
+                                double itemTotal = quantity * price;
+
+                                model.addRow(new Object[] {
+                                                grnId,
+                                                stockProductId,
+                                                stockProductName,
+                                                quantity,
+                                                price,
+                                                itemTotal
+                                });
+                        }
+
+                        if (!hasResults) {
+                                JOptionPane.showMessageDialog(this, "No GRN items matched your search!", "No Results",
+                                                JOptionPane.INFORMATION_MESSAGE);
+                        }
+
+                } catch (Exception e) {
+                        JOptionPane.showMessageDialog(this, "Error searching GRN data: " + e.getMessage());
+                        e.printStackTrace();
+                }
         }
 
         private void loadGRNTable() {
@@ -101,6 +296,7 @@ public class StockManagementGRN extends javax.swing.JPanel {
         // <editor-fold defaultstate="collapsed" desc="Generated
         // <editor-fold defaultstate="collapsed" desc="Generated
         // <editor-fold defaultstate="collapsed" desc="Generated
+        // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -133,7 +329,6 @@ public class StockManagementGRN extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         grnTable = new javax.swing.JTable();
 
-        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
         jPanel1.setForeground(new java.awt.Color(255, 255, 255));
 
         selectStockProduct.setBackground(new java.awt.Color(0, 153, 51));
@@ -307,7 +502,6 @@ public class StockManagementGRN extends javax.swing.JPanel {
                 .addGap(23, 23, 23))
         );
 
-        jPanel2.setBackground(new java.awt.Color(0, 0, 0));
         jPanel2.setForeground(new java.awt.Color(255, 255, 255));
 
         jLabel8.setText("Total Bill");
@@ -382,7 +576,6 @@ public class StockManagementGRN extends javax.swing.JPanel {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        grnTable.setBackground(new java.awt.Color(0, 0, 0));
         grnTable.setForeground(new java.awt.Color(255, 255, 255));
         grnTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -447,84 +640,87 @@ public class StockManagementGRN extends javax.swing.JPanel {
                 String stockID = generateID("stock_id", "stock", "STK");
                 String grnID = generateID("grn_id", "grn", "GRN");
 
-                System.out.println("\n\n\n##################\n\n\n");
-                System.out.println(stockID);
-                System.out.println((grnID));
-                System.out.println("\n\n\n##################\n\n\n");
+                if (!validateInput(quantityText, pString, paidamntText)) {
+                        return;
+                } else {
+                        try {
+                                String stockQuery = String.format(
+                                                "INSERT INTO stock (stock_id, added_date, branch_id) " +
+                                                                "VALUES ('%s', '%s', %d)",
+                                                stockID.replace("'", "''"),
+                                                formattedDateTime.replace("'", "''"),
+                                                branchID);
 
-                try {
-                        String stockQuery = String.format("INSERT INTO stock (stock_id, added_date, branch_id) " +
-                                        "VALUES ('%s', '%s', %d)",
-                                        stockID.replace("'", "''"),
-                                        formattedDateTime.replace("'", "''"),
-                                        branchID);
+                                MySQL2.executeIUD(stockQuery);
 
-                        MySQL2.executeIUD(stockQuery);
+                                String supplierIDQuery = "SELECT id FROM supplier WHERE supplier_id = '"
+                                                + supplier.replace("'", "''") + "'";
+                                ResultSet supplierIdRs = MySQL2.executeSearch(supplierIDQuery);
+                                int supplierId = -1;
+                                if (supplierIdRs.next()) {
+                                        supplierId = supplierIdRs.getInt("id");
+                                } else {
+                                        JOptionPane.showMessageDialog(this, "Error: supplier id not found.");
+                                        return;
+                                }
+                                double paidamnt = Double.parseDouble(paidamntText);
 
-                        String supplierIDQuery = "SELECT id FROM supplier WHERE supplier_id = '"
-                                        + supplier.replace("'", "''") + "'";
-                        ResultSet supplierIdRs = MySQL2.executeSearch(supplierIDQuery);
-                        int supplierId = -1;
-                        if (supplierIdRs.next()) {
-                                supplierId = supplierIdRs.getInt("id");
-                        } else {
-                                JOptionPane.showMessageDialog(this, "Error: supplier id not found.");
-                                return;
+                                String grnQuery = String.format(
+                                                "INSERT INTO grn (grn_id, paid_amount, date, branch_id, employee_id, supplier_id) "
+                                                                +
+                                                                "VALUES ('%s', %f, '%s', %d, %d, %d)",
+                                                grnID.replace("'", "''"),
+                                                paidamnt,
+                                                formattedDateTime,
+                                                branchID,
+                                                employeeID,
+                                                supplierId);
+
+                                MySQL2.executeIUD(grnQuery);
+
+                                String grnIdQuery = "SELECT id FROM grn WHERE grn_id = '" + grnID.replace("'", "''")
+                                                + "'";
+                                ResultSet grnIdResult = MySQL2.executeSearch(grnIdQuery);
+                                int grnIdINT = -1;
+
+                                if (grnIdResult.next()) {
+                                        grnIdINT = grnIdResult.getInt("id");
+                                } else {
+                                        JOptionPane.showMessageDialog(this, "error GRN ID not found.");
+                                        return;
+                                }
+
+                                String stockIdQuery = "SELECT id FROM stock WHERE stock_id = '"
+                                                + stockID.replace("'", "''")
+                                                + "'";
+                                ResultSet stockIdResult = MySQL2.executeSearch(stockIdQuery);
+                                int stockIdINT = -1;
+
+                                if (stockIdResult.next()) {
+                                        stockIdINT = stockIdResult.getInt("id");
+                                } else {
+                                        JOptionPane.showMessageDialog(this, "error Stock ID not found.");
+                                        return;
+                                }
+
+                                double priceDouble = Double.parseDouble(pString);
+                                int quantityInt = Integer.parseInt(quantityText);
+
+                                String grnItemQuery = String.format(
+                                                "INSERT INTO grn_item (quantity, price, grn_id, stock_id) " +
+                                                                "VALUES (%d, %f, %d, %d)",
+                                                quantityInt, priceDouble, grnIdINT, stockIdINT);
+
+                                MySQL2.executeIUD(grnItemQuery);
+
+                                loadGRNTable();
+                                clearFields();
+
+                        } catch (Exception e) {
+                                JOptionPane.showMessageDialog(this, "Operation Error: " + e.getMessage(),
+                                                "Error: ", JOptionPane.WARNING_MESSAGE);
+                                e.printStackTrace();
                         }
-                        double paidamnt = Double.parseDouble(paidamntText);
-
-                        String grnQuery = String.format(
-                                        "INSERT INTO grn (grn_id, paid_amount, date, branch_id, employee_id, supplier_id) "
-                                                        +
-                                                        "VALUES ('%s', %f, '%s', %d, %d, %d)",
-                                        grnID.replace("'", "''"),
-                                        paidamnt,
-                                        formattedDateTime,
-                                        branchID,
-                                        employeeID,
-                                        supplierId);
-
-                        MySQL2.executeIUD(grnQuery);
-
-                        String grnIdQuery = "SELECT id FROM grn WHERE grn_id = '" + grnID.replace("'", "''") + "'";
-                        ResultSet grnIdResult = MySQL2.executeSearch(grnIdQuery);
-                        int grnIdINT = -1;
-
-                        if (grnIdResult.next()) {
-                                grnIdINT = grnIdResult.getInt("id");
-                        } else {
-                                JOptionPane.showMessageDialog(this, "error GRN ID not found.");
-                                return;
-                        }
-
-                        String stockIdQuery = "SELECT id FROM stock WHERE stock_id = '" + stockID.replace("'", "''")
-                                        + "'";
-                        ResultSet stockIdResult = MySQL2.executeSearch(stockIdQuery);
-                        int stockIdINT = -1;
-
-                        if (stockIdResult.next()) {
-                                stockIdINT = stockIdResult.getInt("id");
-                        } else {
-                                JOptionPane.showMessageDialog(this, "error Stock ID not found.");
-                                return;
-                        }
-
-                        double priceDouble = Double.parseDouble(pString);
-                        int quantityInt = Integer.parseInt(quantityText);
-
-                        String grnItemQuery = String.format(
-                                        "INSERT INTO grn_item (quantity, price, grn_id, stock_id) " +
-                                                        "VALUES (%d, %f, %d, %d)",
-                                        quantityInt, priceDouble, grnIdINT, stockIdINT);
-
-                        MySQL2.executeIUD(grnItemQuery);
-
-                        loadGRNTable();
-
-                } catch (Exception e) {
-                        JOptionPane.showMessageDialog(this, "Operation Error: " + e.getMessage(),
-                                        "Error: ", JOptionPane.WARNING_MESSAGE);
-                        e.printStackTrace();
                 }
 
         }// GEN-LAST:event_createGRNActionPerformed
@@ -534,7 +730,7 @@ public class StockManagementGRN extends javax.swing.JPanel {
         }// GEN-LAST:event_selectedStockProductActionPerformed
 
         private void ResetFieldsActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ResetFieldsActionPerformed
-                // TODO add your handling code here:
+                clearFields();
         }// GEN-LAST:event_ResetFieldsActionPerformed
 
         private void selectStockProductActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_selectStockProductActionPerformed

@@ -14,7 +14,7 @@ public class MySQL2 {
         
             if(connection==null){
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                connection=DriverManager.getConnection("jdbc:mysql://localhost:3306/123","root","20151122");
+                connection=DriverManager.getConnection("jdbc:mysql://localhost:3306/1234","root","Srj143@vimani");
             }
         
     }

@@ -12,4 +12,14 @@ public class Validator {
        
     }
     
+    public static final boolean checkPositivenumbers(String text){
+    
+        if(text.matches("^(0|[1-9]\\d*)$")){
+            return true;
+        }else{
+            return false;
+        }
+        
+    }
+    
 }

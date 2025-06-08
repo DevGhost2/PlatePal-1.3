@@ -20,32 +20,27 @@ public class attendance extends javax.swing.JPanel {
 
     public attendance() {
         initComponents();
-        initComponents(); // This initializes jTable1 with the problematic model
+        initComponents(); 
 
-        // Retrieve the column names from the model that initComponents() created.
-        // This ensures we start with the correct visible columns.
+       
         DefaultTableModel initialModel = (DefaultTableModel) jTable1.getModel();
         Vector<String> columnNames = new Vector<>();
         for (int i = 0; i < initialModel.getColumnCount(); i++) {
             columnNames.add(initialModel.getColumnName(i));
         }
 
-        // Create a new DefaultTableModel instance that overrides the isCellEditable method.
-        // This new model will be used by jTable1 from now on.
+       
         DefaultTableModel customTableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                // All cells are non-editable, which matches the original intent
-                // and prevents ArrayIndexOutOfBoundsException when new columns are added.
+              
                 return false;
             }
         };
 
-        // Set the newly created customTableModel to jTable1.
-        // This replaces the auto-generated problematic model without modifying initComponents.
         jTable1.setModel(customTableModel);
 
-        loadattendance(); // This will now populate the new customTableModel
+        loadattendance();
         jButton1.setText("CHECKIN");
 
         Thread clockThread = new Thread(() -> {
@@ -53,14 +48,14 @@ public class attendance extends javax.swing.JPanel {
             while (true) {
                 String currentTime = sdf.format(new Date());
 
-                // Swing updates must happen on the Event Dispatch Thread (EDT)
+               
                 SwingUtilities.invokeLater(() -> jLabel2.setText(currentTime));
 
                 try {
-                    Thread.sleep(1000); // wait for 1 second
+                    Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
-                    break; // Exit if thread is interrupted
+                    break;
                 }
             }
         });
@@ -82,11 +77,11 @@ public class attendance extends javax.swing.JPanel {
             jLabel2.setFont(new Font("Arial", Font.BOLD, 16));
             add(jLabel2);
 
-            // Timer to update label every second
+            
             Timer timer = new Timer(1000, e -> updateDateTime());
             timer.start();
 
-            updateDateTime(); // Call once to show time immediately
+            updateDateTime(); 
             setVisible(true);
         }
 
@@ -120,12 +115,12 @@ public class attendance extends javax.swing.JPanel {
 
                 Vector<String> vector = new Vector<>();
 
-                vector.add(resultset.getString("emp_id")); // Employee ID (e.g., EMP001) - visible in table
+                vector.add(resultset.getString("emp_id")); 
                 vector.add(resultset.getString("first_name"));
                 vector.add(resultset.getString("last_name"));
                 vector.add(resultset.getString("email"));
                 vector.add(resultset.getString("employee_role.type"));
-                // CHANGE 2: Add the actual integer ID to the vector, which will be in the hidden column.
+                
                
 
                 model.addRow(vector);
@@ -367,14 +362,14 @@ public class attendance extends javax.swing.JPanel {
    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
     String internalEmpId = model.getValueAt(selectedRow, model.getColumnCount() - 1).toString();
 
-    // Get current date and time
+    
     SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm:ss");
     String date = sdfDate.format(new Date());
     String time = sdfTime.format(new Date());
 
     try {
-        // Check if already checked in today
+      
         ResultSet rs = MySQL2.executeSearch(
            "SELECT * FROM employee_attendance WHERE employee_id = '" + internalEmpId + "' AND date = '" + date + "'"
         );
@@ -382,7 +377,7 @@ public class attendance extends javax.swing.JPanel {
         if (rs.next()) {
             JOptionPane.showMessageDialog(this, "Employee has already checked in today.");
         } else {
-            // Insert new attendance record
+           
             MySQL2.executeIUD(
                 "INSERT INTO employee_attendance (employee_id, date, checkin_time,attendance_type_id) VALUES ('" + internalEmpId + "', '" + date + "', '" + time + "', '" + 1 + "')"
             );
@@ -420,7 +415,7 @@ public class attendance extends javax.swing.JPanel {
     String time = sdfTime.format(new Date());
 
     try {
-        // Check if there's already an attendance record for today
+        
         ResultSet rs = MySQL2.executeSearch(
             "SELECT * FROM employee_attendance WHERE employee_id = '" + internalEmpId + "' AND date = '" + date + "'"
         );
@@ -432,12 +427,12 @@ public class attendance extends javax.swing.JPanel {
             if (checkoutTime != null && !checkoutTime.trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Employee has already checked out today.");
             } else {
-                // Update checkout time
+                
                 MySQL2.executeIUD(
                     "UPDATE employee_attendance SET checkout_time = '" + time + "' WHERE id = '" + attendanceId + "'"
                 );
                 JOptionPane.showMessageDialog(this, "Checkout successful.");
-                loadattendance(); // Refresh table
+                loadattendance();
             }
 
         } else {

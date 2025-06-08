@@ -4,12 +4,6 @@
  */
 package gui;
 
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -29,19 +23,15 @@ public class BranchAdmin extends javax.swing.JFrame {
     public BranchAdmin() {
         initComponents();
         jButton6.setVisible(false);
+        DashboardPanelBranchAdmin dpba = DashboardPanelBranchAdmin.getInstance();
+        jPanel6.removeAll();
+        jPanel6.add(dpba, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
     }
 
     private int positionX = 0, positionY = 0;
     private int extendedState = 1;
 
-     private static final String DB_NAME = "123";
-    private static final String DB_USER = "root"; // Change to your MySQL username
-    private static final String DB_PASSWORD = "Thet3mjoY$"; // Change to your MySQL password
-    private static final String DB_HOST = "localhost";
-    private static final String DB_PORT = "3306";
-    
-    // MySQL installation path - adjust based on your system
-    private static final String MYSQL_BIN_PATH = "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\";
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -228,6 +218,11 @@ public class BranchAdmin extends javax.swing.JFrame {
         jButton8.setForeground(new java.awt.Color(255, 255, 255));
         jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-box-25.png"))); // NOI18N
         jButton8.setText("                           Reports");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
 
         jButton9.setBackground(new java.awt.Color(51, 51, 51));
         jButton9.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
@@ -414,7 +409,7 @@ public class BranchAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+
         SystemExit();
 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -468,71 +463,77 @@ public class BranchAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-      ProfileBranchAdmin profileDialog = ProfileBranchAdmin.getInstance(this);
-    profileDialog.setVisible(true);
+        ProfileBranchAdmin profileDialog = ProfileBranchAdmin.getInstance(this);
+        profileDialog.setVisible(true);
 
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void LogoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutButtonActionPerformed
-                                                 
-    SystemExit();
+
+        SystemExit();
 
 
     }//GEN-LAST:event_LogoutButtonActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-      StaffPanelBranchAdmin spba= StaffPanelBranchAdmin.getInstance();
-      jPanel6.removeAll();
-      jPanel6.add(spba,BorderLayout.CENTER);
-      SwingUtilities.updateComponentTreeUI(jPanel6);
+        StaffPanelBranchAdmin spba = StaffPanelBranchAdmin.getInstance();
+        jPanel6.removeAll();
+        jPanel6.add(spba, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-      DashboardPanelBranchAdmin dpba= DashboardPanelBranchAdmin.getInstance();
-      jPanel6.removeAll();
-      jPanel6.add(dpba,BorderLayout.CENTER);
-      SwingUtilities.updateComponentTreeUI(jPanel6);
+        DashboardPanelBranchAdmin dpba = DashboardPanelBranchAdmin.getInstance();
+        jPanel6.removeAll();
+        jPanel6.add(dpba, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-                                         
-    ViewRequestAdminPanel vrap = new ViewRequestAdminPanel();
-    jPanel6.removeAll();
-    jPanel6.add(vrap, BorderLayout.CENTER);
-    SwingUtilities.updateComponentTreeUI(jPanel6);
+
+        ViewRequestAdminPanel vrap = new ViewRequestAdminPanel();
+        jPanel6.removeAll();
+        jPanel6.add(vrap, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
 
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-    SalaryBranchAdmin sba = new SalaryBranchAdmin();
-    jPanel6.removeAll();
-    jPanel6.add(sba, BorderLayout.CENTER);
-    SwingUtilities.updateComponentTreeUI(jPanel6);
+        SalaryBranchAdmin sba = new SalaryBranchAdmin();
+        jPanel6.removeAll();
+        jPanel6.add(sba, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
     }//GEN-LAST:event_jButton14ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
-    AttendanceBranchAdmin aba = new AttendanceBranchAdmin();
-    jPanel6.removeAll();
-    jPanel6.add(aba, BorderLayout.CENTER);
-    SwingUtilities.updateComponentTreeUI(jPanel6);
+        AttendanceBranchAdmin aba = new AttendanceBranchAdmin();
+        jPanel6.removeAll();
+        jPanel6.add(aba, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-                                                
-    
-    BackupRestoreBranchAdmin brg = new BackupRestoreBranchAdmin();
-    jPanel6.removeAll();
-    jPanel6.add(brg, BorderLayout.CENTER);
-    SwingUtilities.updateComponentTreeUI(jPanel6);
+
+        BackupRestoreBranchAdmin brg = new BackupRestoreBranchAdmin();
+        jPanel6.removeAll();
+        jPanel6.add(brg, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
 
     }//GEN-LAST:event_jButton11ActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-    MenuBranchAdmin brg = new MenuBranchAdmin();
-    jPanel6.removeAll();
-    jPanel6.add(brg, BorderLayout.CENTER);
-    SwingUtilities.updateComponentTreeUI(jPanel6);
+        MenuBranchAdmin brg = new MenuBranchAdmin();
+        jPanel6.removeAll();
+        jPanel6.add(brg, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
     }//GEN-LAST:event_jButton13ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        AdminReports AdminReports = new AdminReports();
+        jPanel6.removeAll();
+        jPanel6.add(AdminReports, BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(jPanel6);
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     private void menuExpandLeft() {
         jButton6.setVisible(true);
@@ -545,7 +546,7 @@ public class BranchAdmin extends javax.swing.JFrame {
         jButton10.setText("");
         LogoutButton.setText("");
         jButton12.setText("");
-        
+
         jButton14.setText("");
 
         Thread t = new Thread(
@@ -584,7 +585,7 @@ public class BranchAdmin extends javax.swing.JFrame {
         jButton10.setText("                       Requests");
         LogoutButton.setText("                        LOGOUT");
         jButton12.setText("                    Attendance");
-        
+
         jButton14.setText("                            Salary ");
 
         Thread t = new Thread(
@@ -611,23 +612,23 @@ public class BranchAdmin extends javax.swing.JFrame {
     }
 
     private void SystemExit() {
-    int option = JOptionPane.showConfirmDialog(this, "Do you want to log out from the system?", "Confirm Logout", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        int option = JOptionPane.showConfirmDialog(this, "Do you want to log out from the system?", "Confirm Logout", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
-    if (option == JOptionPane.YES_OPTION) {
-        try {
-            // Close the current window
-            this.dispose();
-            
-            // Create and show the Login window
-            java.awt.EventQueue.invokeLater(() -> {
-                new Login().setVisible(true);
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error logging out: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        if (option == JOptionPane.YES_OPTION) {
+            try {
+                // Close the current window
+                this.dispose();
+
+                // Create and show the Login window
+                java.awt.EventQueue.invokeLater(() -> {
+                    new Login().setVisible(true);
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error logging out: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
-}
 
     /**
      * @param args the command line arguments

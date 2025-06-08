@@ -31,7 +31,7 @@ public class BackupRestoreBranchAdmin extends javax.swing.JPanel {
 
 private static final String DB_NAME = "123";
 private static final String DB_USER = "root"; 
-private static final String DB_PASSWORD = "Thet3mjoY$"; 
+private static final String DB_PASSWORD = "Srj143@vimani"; 
 private static final String DB_HOST = "localhost";
 private static final String DB_PORT = "3306";
 private static final String MYSQL_BIN_PATH = "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\";

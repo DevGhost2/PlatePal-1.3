@@ -5,12 +5,17 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Vector;
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import model.MySQL2;
 
 /**
@@ -161,372 +166,188 @@ private void loadProgressTable() {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel8 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        jPanel9 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        jPanel6 = new javax.swing.JPanel();
-        ActiveCustomersPanel = new javax.swing.JPanel();
+        jPanel6 = new RoundedPanel(15, new Color(230, 230, 230), new Color(0,0,0,0));
+        ActiveCustomersPanel = new RoundedPanel(15, new Color(230, 230, 230), new Color(0,0,0,0));
         ActiveCustomersLabel = new javax.swing.JLabel();
         ActiveCustomersTotalNoLabel = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
-        CompleteOrdersPanel = new javax.swing.JPanel();
-        CompleteOrdersLabel = new javax.swing.JLabel();
+        jPanel4 = new RoundedPanel(15, new Color(230, 230, 230), new Color(0,0,0,0));
+        CompleteOrdersPanel = new RoundedPanel(15, new Color(230, 230, 230), new Color(0,0,0,0));
         TotalOrdersTotalNoLabel = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        FailedOrdersPanel = new javax.swing.JPanel();
-        FailedOrdersLabel = new javax.swing.JLabel();
+        CompleteOrdersLabel = new javax.swing.JLabel();
+        jPanel3 = new RoundedPanel(15, new Color(230, 230, 230), new Color(0,0,0,0));
+        FailedOrdersPanel = new RoundedPanel(15, new Color(230, 230, 230), new Color(0,0,0,0));
         FailedOrdersTotalNoLabel = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        TodaysRevenuePanel = new javax.swing.JPanel();
-        TodaysRevenueLabel = new javax.swing.JLabel();
+        FailedOrdersLabel = new javax.swing.JLabel();
+        jPanel2 = new RoundedPanel(15, new Color(230, 230, 230), new Color(0,0,0,0));
+        TodaysRevenuePanel = new RoundedPanel(15, new Color(230, 230, 230), new Color(0,0,0,0));
         TodaysRevenueTotalNoLabel = new javax.swing.JLabel();
-        jPanel5 = new javax.swing.JPanel();
-        PendingOrdersPanel = new javax.swing.JPanel();
-        PendingOrdersLabel = new javax.swing.JLabel();
+        TodaysRevenueLabel = new javax.swing.JLabel();
+        jPanel5 = new RoundedPanel(15, new Color(230, 230, 230), new Color(0,0,0,0));
+        PendingOrdersPanel = new RoundedPanel(15, new Color(230, 230, 230), new Color(0,0,0,0));
         PendingOrdersTotalNoLabel = new javax.swing.JLabel();
-        jPanel11 = new javax.swing.JPanel();
-        ActiveeEmployeesPanel = new javax.swing.JPanel();
-        ActiveEmployeesLabel = new javax.swing.JLabel();
+        PendingOrdersLabel = new javax.swing.JLabel();
+        jPanel11 = new RoundedPanel(15, new Color(230, 230, 230), new Color(0,0,0,0));
+        ActiveeEmployeesPanel = new RoundedPanel(15, new Color(230, 230, 230), new Color(0,0,0,0));
         ActiveEmployeesTotalNoLabel = new javax.swing.JLabel();
-        ProgressPanel = new javax.swing.JPanel();
+        ActiveEmployeesLabel = new javax.swing.JLabel();
+        ProgressPanel = new RoundedPanel(15, new Color(230, 230, 230), new Color(0,0,0,0));
         ProgressLabel = new javax.swing.JLabel();
         ProgressScrollPane = new javax.swing.JScrollPane();
         progressTable = new javax.swing.JTable();
 
-        setLayout(new java.awt.GridLayout(2, 1));
+        setPreferredSize(new java.awt.Dimension(500, 300));
+        setLayout(new java.awt.BorderLayout());
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setLayout(new java.awt.GridLayout(2, 3));
+        jPanel8.setLayout(new java.awt.BorderLayout());
 
-        ActiveCustomersPanel.setBackground(new java.awt.Color(255, 255, 255));
-        ActiveCustomersPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel7.setLayout(new java.awt.BorderLayout(0, 10));
 
-        ActiveCustomersLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ActiveCustomersLabel.setForeground(new java.awt.Color(255, 204, 102));
+        jPanel9.setLayout(new java.awt.BorderLayout());
+
+        jPanel1.setMaximumSize(new java.awt.Dimension(32767, 200));
+        jPanel1.setMinimumSize(new java.awt.Dimension(300, 200));
+        jPanel1.setPreferredSize(new java.awt.Dimension(300, 200));
+        jPanel1.setLayout(new java.awt.GridLayout(2, 3, 10, 10));
+
+        jPanel6.setLayout(new java.awt.BorderLayout());
+
+        ActiveCustomersPanel.setLayout(new java.awt.BorderLayout());
+
+        ActiveCustomersLabel.setFont(new java.awt.Font("Poppins", 1, 24)); // NOI18N
+        ActiveCustomersLabel.setForeground(new java.awt.Color(153, 0, 0));
+        ActiveCustomersLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ActiveCustomersLabel.setText("Active Customers");
+        ActiveCustomersPanel.add(ActiveCustomersLabel, java.awt.BorderLayout.PAGE_START);
 
-        ActiveCustomersTotalNoLabel.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
-        ActiveCustomersTotalNoLabel.setForeground(new java.awt.Color(255, 204, 102));
+        ActiveCustomersTotalNoLabel.setFont(new java.awt.Font("Poppins", 1, 55)); // NOI18N
+        ActiveCustomersTotalNoLabel.setForeground(new java.awt.Color(0, 0, 1));
+        ActiveCustomersTotalNoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ActiveCustomersTotalNoLabel.setText("100");
+        ActiveCustomersPanel.add(ActiveCustomersTotalNoLabel, java.awt.BorderLayout.CENTER);
 
-        javax.swing.GroupLayout ActiveCustomersPanelLayout = new javax.swing.GroupLayout(ActiveCustomersPanel);
-        ActiveCustomersPanel.setLayout(ActiveCustomersPanelLayout);
-        ActiveCustomersPanelLayout.setHorizontalGroup(
-            ActiveCustomersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ActiveCustomersPanelLayout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(ActiveCustomersLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ActiveCustomersPanelLayout.createSequentialGroup()
-                .addContainerGap(124, Short.MAX_VALUE)
-                .addComponent(ActiveCustomersTotalNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(54, 54, 54))
-        );
-        ActiveCustomersPanelLayout.setVerticalGroup(
-            ActiveCustomersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ActiveCustomersPanelLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(ActiveCustomersLabel)
-                .addGap(29, 29, 29)
-                .addComponent(ActiveCustomersTotalNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(77, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(ActiveCustomersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(ActiveCustomersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel6.add(ActiveCustomersPanel, java.awt.BorderLayout.CENTER);
 
         jPanel1.add(jPanel6);
 
-        CompleteOrdersPanel.setBackground(new java.awt.Color(255, 255, 255));
-        CompleteOrdersPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel4.setLayout(new java.awt.BorderLayout());
 
-        CompleteOrdersLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        CompleteOrdersLabel.setForeground(new java.awt.Color(255, 204, 102));
-        CompleteOrdersLabel.setText("Complete Orders");
+        CompleteOrdersPanel.setLayout(new java.awt.BorderLayout());
 
-        TotalOrdersTotalNoLabel.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
-        TotalOrdersTotalNoLabel.setForeground(new java.awt.Color(255, 204, 102));
+        TotalOrdersTotalNoLabel.setFont(new java.awt.Font("Poppins", 1, 55)); // NOI18N
+        TotalOrdersTotalNoLabel.setForeground(new java.awt.Color(0, 0, 1));
+        TotalOrdersTotalNoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         TotalOrdersTotalNoLabel.setText("100");
+        CompleteOrdersPanel.add(TotalOrdersTotalNoLabel, java.awt.BorderLayout.CENTER);
 
-        javax.swing.GroupLayout CompleteOrdersPanelLayout = new javax.swing.GroupLayout(CompleteOrdersPanel);
-        CompleteOrdersPanel.setLayout(CompleteOrdersPanelLayout);
-        CompleteOrdersPanelLayout.setHorizontalGroup(
-            CompleteOrdersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(CompleteOrdersPanelLayout.createSequentialGroup()
-                .addGroup(CompleteOrdersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(CompleteOrdersPanelLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(CompleteOrdersLabel))
-                    .addGroup(CompleteOrdersPanelLayout.createSequentialGroup()
-                        .addGap(81, 81, 81)
-                        .addComponent(TotalOrdersTotalNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(97, Short.MAX_VALUE))
-        );
-        CompleteOrdersPanelLayout.setVerticalGroup(
-            CompleteOrdersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(CompleteOrdersPanelLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(CompleteOrdersLabel)
-                .addGap(33, 33, 33)
-                .addComponent(TotalOrdersTotalNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(73, Short.MAX_VALUE))
-        );
+        CompleteOrdersLabel.setFont(new java.awt.Font("Poppins", 1, 24)); // NOI18N
+        CompleteOrdersLabel.setForeground(new java.awt.Color(153, 0, 0));
+        CompleteOrdersLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        CompleteOrdersLabel.setText("Complete Orders");
+        CompleteOrdersPanel.add(CompleteOrdersLabel, java.awt.BorderLayout.PAGE_START);
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(CompleteOrdersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(CompleteOrdersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel4.add(CompleteOrdersPanel, java.awt.BorderLayout.CENTER);
 
         jPanel1.add(jPanel4);
 
-        FailedOrdersPanel.setBackground(new java.awt.Color(255, 255, 255));
-        FailedOrdersPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel3.setLayout(new java.awt.BorderLayout());
 
-        FailedOrdersLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        FailedOrdersLabel.setForeground(new java.awt.Color(255, 204, 102));
-        FailedOrdersLabel.setText("Failed Orders");
+        FailedOrdersPanel.setLayout(new java.awt.BorderLayout());
 
-        FailedOrdersTotalNoLabel.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
-        FailedOrdersTotalNoLabel.setForeground(new java.awt.Color(255, 204, 102));
+        FailedOrdersTotalNoLabel.setFont(new java.awt.Font("Poppins", 1, 55)); // NOI18N
+        FailedOrdersTotalNoLabel.setForeground(new java.awt.Color(0, 0, 1));
+        FailedOrdersTotalNoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         FailedOrdersTotalNoLabel.setText("100");
+        FailedOrdersPanel.add(FailedOrdersTotalNoLabel, java.awt.BorderLayout.CENTER);
 
-        javax.swing.GroupLayout FailedOrdersPanelLayout = new javax.swing.GroupLayout(FailedOrdersPanel);
-        FailedOrdersPanel.setLayout(FailedOrdersPanelLayout);
-        FailedOrdersPanelLayout.setHorizontalGroup(
-            FailedOrdersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(FailedOrdersPanelLayout.createSequentialGroup()
-                .addGroup(FailedOrdersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(FailedOrdersPanelLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(FailedOrdersLabel))
-                    .addGroup(FailedOrdersPanelLayout.createSequentialGroup()
-                        .addGap(79, 79, 79)
-                        .addComponent(FailedOrdersTotalNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(99, Short.MAX_VALUE))
-        );
-        FailedOrdersPanelLayout.setVerticalGroup(
-            FailedOrdersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(FailedOrdersPanelLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(FailedOrdersLabel)
-                .addGap(32, 32, 32)
-                .addComponent(FailedOrdersTotalNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(74, Short.MAX_VALUE))
-        );
+        FailedOrdersLabel.setFont(new java.awt.Font("Poppins", 1, 24)); // NOI18N
+        FailedOrdersLabel.setForeground(new java.awt.Color(153, 0, 0));
+        FailedOrdersLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        FailedOrdersLabel.setText("Failed Orders");
+        FailedOrdersPanel.add(FailedOrdersLabel, java.awt.BorderLayout.PAGE_START);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(FailedOrdersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(FailedOrdersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel3.add(FailedOrdersPanel, java.awt.BorderLayout.CENTER);
 
         jPanel1.add(jPanel3);
 
-        TodaysRevenuePanel.setBackground(new java.awt.Color(255, 255, 255));
-        TodaysRevenuePanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel2.setLayout(new java.awt.BorderLayout());
 
-        TodaysRevenueLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        TodaysRevenueLabel.setForeground(new java.awt.Color(255, 204, 102));
-        TodaysRevenueLabel.setText("Today's Revenue");
+        TodaysRevenuePanel.setLayout(new java.awt.BorderLayout());
 
-        TodaysRevenueTotalNoLabel.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
-        TodaysRevenueTotalNoLabel.setForeground(new java.awt.Color(255, 204, 102));
+        TodaysRevenueTotalNoLabel.setFont(new java.awt.Font("Poppins", 1, 55)); // NOI18N
+        TodaysRevenueTotalNoLabel.setForeground(new java.awt.Color(0, 0, 1));
+        TodaysRevenueTotalNoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         TodaysRevenueTotalNoLabel.setText("100");
+        TodaysRevenuePanel.add(TodaysRevenueTotalNoLabel, java.awt.BorderLayout.CENTER);
 
-        javax.swing.GroupLayout TodaysRevenuePanelLayout = new javax.swing.GroupLayout(TodaysRevenuePanel);
-        TodaysRevenuePanel.setLayout(TodaysRevenuePanelLayout);
-        TodaysRevenuePanelLayout.setHorizontalGroup(
-            TodaysRevenuePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(TodaysRevenuePanelLayout.createSequentialGroup()
-                .addGroup(TodaysRevenuePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(TodaysRevenuePanelLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(TodaysRevenueLabel))
-                    .addGroup(TodaysRevenuePanelLayout.createSequentialGroup()
-                        .addGap(82, 82, 82)
-                        .addComponent(TodaysRevenueTotalNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(96, Short.MAX_VALUE))
-        );
-        TodaysRevenuePanelLayout.setVerticalGroup(
-            TodaysRevenuePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(TodaysRevenuePanelLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(TodaysRevenueLabel)
-                .addGap(33, 33, 33)
-                .addComponent(TodaysRevenueTotalNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(73, Short.MAX_VALUE))
-        );
+        TodaysRevenueLabel.setFont(new java.awt.Font("Poppins", 1, 24)); // NOI18N
+        TodaysRevenueLabel.setForeground(new java.awt.Color(153, 0, 0));
+        TodaysRevenueLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        TodaysRevenueLabel.setText("Today's Revenue");
+        TodaysRevenuePanel.add(TodaysRevenueLabel, java.awt.BorderLayout.PAGE_START);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(TodaysRevenuePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(TodaysRevenuePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel2.add(TodaysRevenuePanel, java.awt.BorderLayout.CENTER);
 
         jPanel1.add(jPanel2);
 
-        PendingOrdersPanel.setBackground(new java.awt.Color(255, 255, 255));
-        PendingOrdersPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel5.setLayout(new java.awt.BorderLayout());
 
-        PendingOrdersLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        PendingOrdersLabel.setForeground(new java.awt.Color(255, 204, 102));
-        PendingOrdersLabel.setText("Pending Orders");
+        PendingOrdersPanel.setLayout(new java.awt.BorderLayout());
 
-        PendingOrdersTotalNoLabel.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
-        PendingOrdersTotalNoLabel.setForeground(new java.awt.Color(255, 204, 102));
+        PendingOrdersTotalNoLabel.setFont(new java.awt.Font("Poppins", 1, 55)); // NOI18N
+        PendingOrdersTotalNoLabel.setForeground(new java.awt.Color(0, 0, 1));
+        PendingOrdersTotalNoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         PendingOrdersTotalNoLabel.setText("100");
+        PendingOrdersPanel.add(PendingOrdersTotalNoLabel, java.awt.BorderLayout.CENTER);
 
-        javax.swing.GroupLayout PendingOrdersPanelLayout = new javax.swing.GroupLayout(PendingOrdersPanel);
-        PendingOrdersPanel.setLayout(PendingOrdersPanelLayout);
-        PendingOrdersPanelLayout.setHorizontalGroup(
-            PendingOrdersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PendingOrdersPanelLayout.createSequentialGroup()
-                .addGroup(PendingOrdersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(PendingOrdersPanelLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(PendingOrdersLabel))
-                    .addGroup(PendingOrdersPanelLayout.createSequentialGroup()
-                        .addGap(81, 81, 81)
-                        .addComponent(PendingOrdersTotalNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(97, Short.MAX_VALUE))
-        );
-        PendingOrdersPanelLayout.setVerticalGroup(
-            PendingOrdersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PendingOrdersPanelLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(PendingOrdersLabel)
-                .addGap(32, 32, 32)
-                .addComponent(PendingOrdersTotalNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(74, Short.MAX_VALUE))
-        );
+        PendingOrdersLabel.setFont(new java.awt.Font("Poppins", 1, 24)); // NOI18N
+        PendingOrdersLabel.setForeground(new java.awt.Color(153, 0, 0));
+        PendingOrdersLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        PendingOrdersLabel.setText("Pending Orders");
+        PendingOrdersPanel.add(PendingOrdersLabel, java.awt.BorderLayout.PAGE_START);
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(PendingOrdersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(PendingOrdersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel5.add(PendingOrdersPanel, java.awt.BorderLayout.CENTER);
 
         jPanel1.add(jPanel5);
 
-        ActiveeEmployeesPanel.setBackground(new java.awt.Color(255, 255, 255));
-        ActiveeEmployeesPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel11.setLayout(new java.awt.BorderLayout());
 
-        ActiveEmployeesLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ActiveEmployeesLabel.setForeground(new java.awt.Color(255, 204, 102));
-        ActiveEmployeesLabel.setText("Active Employees");
+        ActiveeEmployeesPanel.setLayout(new java.awt.BorderLayout());
 
-        ActiveEmployeesTotalNoLabel.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
-        ActiveEmployeesTotalNoLabel.setForeground(new java.awt.Color(255, 204, 102));
+        ActiveEmployeesTotalNoLabel.setFont(new java.awt.Font("Poppins", 1, 55)); // NOI18N
+        ActiveEmployeesTotalNoLabel.setForeground(new java.awt.Color(0, 0, 1));
+        ActiveEmployeesTotalNoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ActiveEmployeesTotalNoLabel.setText("100");
+        ActiveeEmployeesPanel.add(ActiveEmployeesTotalNoLabel, java.awt.BorderLayout.CENTER);
 
-        javax.swing.GroupLayout ActiveeEmployeesPanelLayout = new javax.swing.GroupLayout(ActiveeEmployeesPanel);
-        ActiveeEmployeesPanel.setLayout(ActiveeEmployeesPanelLayout);
-        ActiveeEmployeesPanelLayout.setHorizontalGroup(
-            ActiveeEmployeesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ActiveeEmployeesPanelLayout.createSequentialGroup()
-                .addGroup(ActiveeEmployeesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(ActiveeEmployeesPanelLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(ActiveEmployeesLabel))
-                    .addGroup(ActiveeEmployeesPanelLayout.createSequentialGroup()
-                        .addGap(78, 78, 78)
-                        .addComponent(ActiveEmployeesTotalNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(100, Short.MAX_VALUE))
-        );
-        ActiveeEmployeesPanelLayout.setVerticalGroup(
-            ActiveeEmployeesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ActiveeEmployeesPanelLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(ActiveEmployeesLabel)
-                .addGap(31, 31, 31)
-                .addComponent(ActiveEmployeesTotalNoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(75, Short.MAX_VALUE))
-        );
+        ActiveEmployeesLabel.setFont(new java.awt.Font("Poppins", 1, 24)); // NOI18N
+        ActiveEmployeesLabel.setForeground(new java.awt.Color(153, 0, 0));
+        ActiveEmployeesLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        ActiveEmployeesLabel.setText("Active Employees");
+        ActiveeEmployeesPanel.add(ActiveEmployeesLabel, java.awt.BorderLayout.PAGE_START);
 
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(ActiveeEmployeesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(ActiveeEmployeesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel11.add(ActiveeEmployeesPanel, java.awt.BorderLayout.CENTER);
 
         jPanel1.add(jPanel11);
 
-        add(jPanel1);
+        jPanel9.add(jPanel1, java.awt.BorderLayout.CENTER);
 
-        ProgressPanel.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel7.add(jPanel9, java.awt.BorderLayout.PAGE_START);
+
+        ProgressPanel.setPreferredSize(new java.awt.Dimension(250, 228));
         ProgressPanel.setLayout(new java.awt.BorderLayout());
 
-        ProgressLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        ProgressLabel.setFont(new java.awt.Font("Poppins", 1, 18)); // NOI18N
+        ProgressLabel.setForeground(new java.awt.Color(0, 0, 1));
+        ProgressLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ProgressLabel.setText("Progress");
         ProgressPanel.add(ProgressLabel, java.awt.BorderLayout.PAGE_START);
+
+        ProgressScrollPane.setBorder(null);
+        ProgressScrollPane.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
 
         progressTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -540,10 +361,28 @@ private void loadProgressTable() {
             }
         ));
         ProgressScrollPane.setViewportView(progressTable);
+        progressTable.setShowGrid(false);
+        progressTable.setIntercellSpacing(new Dimension(0, 0));
+
+        progressTable.setBackground(new Color(230, 230, 230));
+        progressTable.setForeground(Color.BLACK);
+        progressTable.setFont(new Font("Poppins", Font.PLAIN, 14));
+        progressTable.setRowHeight(25);
+
+        JTableHeader header = progressTable.getTableHeader();
+        header.setBackground(new Color(230, 230, 230));
+        header.setForeground(Color.BLACK);
+        header.setFont(new Font("Poppins", Font.PLAIN, 14));
+        header.setBorder(BorderFactory.createEmptyBorder());
+        header.setOpaque(true);
 
         ProgressPanel.add(ProgressScrollPane, java.awt.BorderLayout.CENTER);
 
-        add(ProgressPanel);
+        jPanel7.add(ProgressPanel, java.awt.BorderLayout.CENTER);
+
+        jPanel8.add(jPanel7, java.awt.BorderLayout.CENTER);
+
+        add(jPanel8, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 
@@ -576,6 +415,9 @@ private void loadProgressTable() {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JTable progressTable;
     // End of variables declaration//GEN-END:variables
 }
