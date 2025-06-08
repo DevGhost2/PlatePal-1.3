@@ -6,6 +6,7 @@ package gui;
 
 import gui.*;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JOptionPane;
@@ -23,6 +24,15 @@ public class Reciption extends javax.swing.JFrame {
     public Reciption() {
         initComponents();
         jButton6.setVisible(false);
+
+        reciptionDashbord reciptionDashbord = new reciptionDashbord();
+
+        jPanel6.removeAll();
+        jPanel6.add(reciptionDashbord, BorderLayout.CENTER);
+
+        jPanel6.revalidate();
+        jPanel6.repaint();
+
     }
 
     private int positionX = 0, positionY = 0;
@@ -205,30 +215,55 @@ public class Reciption extends javax.swing.JFrame {
         jButton7.setForeground(new java.awt.Color(255, 255, 255));
         jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-content-25.png"))); // NOI18N
         jButton7.setText("                 DASHBOARD");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         jButton8.setBackground(new java.awt.Color(51, 51, 51));
         jButton8.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
         jButton8.setForeground(new java.awt.Color(255, 255, 255));
         jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-customers-25.png"))); // NOI18N
         jButton8.setText("                 CUSTOMERS");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
 
         jButton9.setBackground(new java.awt.Color(51, 51, 51));
         jButton9.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
         jButton9.setForeground(new java.awt.Color(255, 255, 255));
         jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-pen-25.png"))); // NOI18N
-        jButton9.setText("                     FEEDBACK");
+        jButton9.setText("                     REPORTS");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
 
         jButton10.setBackground(new java.awt.Color(51, 51, 51));
         jButton10.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
         jButton10.setForeground(new java.awt.Color(255, 255, 255));
         jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-date-25.png"))); // NOI18N
         jButton10.setText("               ATTENDENCE");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
 
         jButton11.setBackground(new java.awt.Color(51, 51, 51));
         jButton11.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
         jButton11.setForeground(new java.awt.Color(255, 255, 255));
         jButton11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resourcess/icons8-message-25.png"))); // NOI18N
         jButton11.setText("                       REQUEST");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
 
         jButton12.setBackground(new java.awt.Color(255, 51, 51));
         jButton12.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
@@ -267,7 +302,7 @@ public class Reciption extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(32, 32, 32)
                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -276,29 +311,18 @@ public class Reciption extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 234, Short.MAX_VALUE)
                 .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(228, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        jPanel6.setBackground(new java.awt.Color(204, 204, 204));
         jPanel6.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        jPanel6.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -349,11 +373,8 @@ public class Reciption extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int option = JOptionPane.showConfirmDialog(this, "Do you want to exit from the system", "Confirm Message", JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
-        if (option == JOptionPane.YES_OPTION) {
-            SystemExit();
-        }
+        SystemExit();
 
 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -407,12 +428,71 @@ public class Reciption extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        profile profile = new profile();
+
+        jPanel6.removeAll();
+        jPanel6.add(profile, BorderLayout.CENTER);
+
+        jPanel6.revalidate();
+        jPanel6.repaint();
+
+
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
-        SystemExit();
+        Login login = new Login();
+        login.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton12ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        // clearObject();
+        customer customer = new customer();
+
+        jPanel6.removeAll();
+        jPanel6.add(customer, BorderLayout.CENTER);
+
+        jPanel6.revalidate();
+        jPanel6.repaint();
+
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+
+        AttendanceReciption AttendanceReciption = new AttendanceReciption();
+
+        jPanel6.removeAll();
+        jPanel6.add(AttendanceReciption, BorderLayout.CENTER);
+
+        jPanel6.revalidate();
+        jPanel6.repaint();
+    }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+
+        receptionreqest receptionreqest = new receptionreqest();
+
+        jPanel6.removeAll();
+        jPanel6.add(receptionreqest, BorderLayout.CENTER);
+
+        jPanel6.revalidate();
+        jPanel6.repaint();
+    }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        reciptionDashbord reciptionDashbord = new reciptionDashbord();
+
+        jPanel6.removeAll();
+        jPanel6.add(reciptionDashbord, BorderLayout.CENTER);
+
+        jPanel6.revalidate();
+        jPanel6.repaint();
+
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton9ActionPerformed
 
     private void menuExpandLeft() {
         jButton6.setVisible(true);
@@ -421,7 +501,7 @@ public class Reciption extends javax.swing.JFrame {
         jButton6.setText("");
         jButton7.setText("");
         jButton8.setText("");
-        jButton9.setText("");
+
         jButton10.setText("");
         jButton11.setText("");
         jButton12.setText("");
@@ -458,7 +538,7 @@ public class Reciption extends javax.swing.JFrame {
         jButton6.setText("                          PROFILE");
         jButton7.setText("                 DASHBOARD");
         jButton8.setText("                 CUSTOMERS");
-        jButton9.setText("                     FEEDBACK");
+
         jButton10.setText("               ATTENDENCE");
         jButton11.setText("                       REQUEST");
         jButton12.setText("                        LOGOUT");
@@ -491,8 +571,8 @@ public class Reciption extends javax.swing.JFrame {
 
         if (option == JOptionPane.YES_OPTION) {
             this.dispose();
-            Login login = new Login();
-            login.setVisible(true);
+//            Login login = new Login();
+//            login.setVisible(true);
         }
     }
 
